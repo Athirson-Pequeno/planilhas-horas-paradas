@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:orientation="horizontal"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/textCel"
+        android:layout_width="30pt"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/cel"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textCod"
+        android:layout_width="30pt"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/cod"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textHoraI"
+        android:layout_width="30pt"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/horaI"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textHoraF"
+        android:layout_width="30pt"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/horaF"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textObs"
+        android:layout_width="30pt"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/obs"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

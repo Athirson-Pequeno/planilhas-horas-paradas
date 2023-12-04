@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">Planilha Horas Paradas</string>
+    <string name="name_user">Nome de usuário</string>
+    <string name="signed_in_fmt">Conectado com: %s</string>
+    <string name="signed_out">Desconectado</string>
+    <string name="login">Login</string>
+    <string name="cel">cel</string>
+    <string name="horaI">horaI</string>
+    <string name="horaF">horaF</string>
+    <string name="obs">obs</string>
+    <string name="celula">Cél.</string>
+    <string name="horaIni">Hora ini.</string>
+    <string name="horaFim">Hora fim</string>
+    <string name="obsErva">Obs.</string>
+    <string name="cod">cod</string>
+
+    <string-array name="tiposPessoa">
+        <item>Selecione o código da parada.</item>
+        <item>11102 - Troca de programação</item>
+        <item>11105 - Troca de cepo</item>
+        <item>11201 - Manutenção não planejada</item>
+        <item>11202 - Lubrificação</item>
+        <item>11301 - Manutenção na subestação</item>
+        <item>11401 - Testes/Amostra</item>
+        <item>11501 - Preenchimento de check list</item>
+        <item>11601 - Pausa ativa</item>
+        <item>11701 - DDS/DDQ/Treinamento</item>
+        <item>11801 - Inventário</item>
+        <item>12101 - Falha elétrica</item>
+        <item>12107 - Vazamento de óleo</item>
+        <item>12110 - Falha mecânica</item>
+        <item>12114 - Faca quebrada</item>
+        <item>12118 - Quebra do molde de escareação</item>
+        <item>12208 - Regulagem maquina</item>
+        <item>12210 - Limpeza da sola</item>
+        <item>12211 - Troca de extrato de faca</item>
+        <item>12212 - Ajuste montadeira</item>
+        <item>12213 - Ajuste de cepo</item>
+        <item>12214 - Ajuste escareação</item>
+        <item>12317 - Falta de sola</item>
+        <item>12322 - Falta de etiqueta</item>
+        <item>12323 - Falta forquilha</item>
+        <item>12324 - Falta sacos, cartuchos, caixas</item>
+        <item>12325 - Falta sola, forquilha, etiqueta</item>
+        <item>12326 - Falta faca</item>
+        <item>12402 - Falta mão de obra</item>
+        <item>12403 - Atraso na rota</item>
+        <item>12404 - Atraso mão de obra</item>
+        <item>12508 - Material casado errado sola + forquilha</item>
+        <item>12706 - Falta de ar comprimido</item>
+        <item>12707 - Falta de energia</item>
+        <item>12711 - Refeição</item>
+        <item>12712 - Intervenção da segurança do trabalho</item>
+        <item>12713 - Troca de turno</item>
+        <item>12720 - Embalagem danificada</item>
+        <item>12721 - Erro de programação</item>
+        <item>12722 - Partida de fábrica</item>
+        <item>12723 - Parada de fábrica</item>
+        <item>12727 - Falta de programação (cartão lean)</item>
+        <item>12728 - Abandono de área</item>
+        <item>13101 - Retrabalho</item>
+        <item>13202 - Material com bolha</item>
+        <item>13203 - Falta filete</item>
+        <item>13204 - Material encolhido</item>
+        <item>13210 - Material com arroz liso</item>
+        <item>31129 - Material machado</item>
+    </string-array>
+</resources>
