@@ -12,7 +12,7 @@ import com.example.planilhahorasparadas.models.Paradas;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParadasDAO implements IParadasDAO{
+public class ParadasDAO implements IParadasDAO {
 
     private SQLiteDatabase write;
     private SQLiteDatabase read;
@@ -21,6 +21,7 @@ public class ParadasDAO implements IParadasDAO{
         DBParadasHelper dbParadasHelper = new DBParadasHelper(context);
         this.write = dbParadasHelper.getWritableDatabase();
         this.read = dbParadasHelper.getReadableDatabase();
+
     }
 
     @Override
@@ -36,8 +37,8 @@ public class ParadasDAO implements IParadasDAO{
         try {
             write.insert(DBParadasHelper.TABLE_NAME, null, contentValues);
             Log.i("INFO", "Parada Save");
-        }catch (Exception e){
-            Log.i("INFO", "Parada not saved: "+e.getMessage());
+        } catch (Exception e) {
+            Log.i("INFO", "Parada not saved: " + e.getMessage());
             return false;
         }
         return true;
@@ -45,7 +46,7 @@ public class ParadasDAO implements IParadasDAO{
 
     @Override
     public boolean update(Paradas parada) {
-       return false;
+        return false;
     }
 
     @Override
@@ -56,9 +57,9 @@ public class ParadasDAO implements IParadasDAO{
             write.delete(DBParadasHelper.TABLE_NAME, "id=?", args);
             Log.i("INFO", "Parada deletada");
 
-        }catch (Exception e){
-            Log.i("INFO", "Erro ao deletar"+ e.getMessage());
-            return  false;
+        } catch (Exception e) {
+            Log.i("INFO", "Erro ao deletar" + e.getMessage());
+            return false;
         }
 
         return true;
@@ -72,9 +73,9 @@ public class ParadasDAO implements IParadasDAO{
             write.delete(DBParadasHelper.TABLE_NAME, "data=?", args);
             Log.i("INFO", "Data deletada");
 
-        }catch (Exception e){
-            Log.i("INFO", "Erro ao deletar"+ e.getMessage());
-            return  false;
+        } catch (Exception e) {
+            Log.i("INFO", "Erro ao deletar" + e.getMessage());
+            return false;
         }
 
         return true;
@@ -88,7 +89,7 @@ public class ParadasDAO implements IParadasDAO{
         String sql = "SELECT * FROM " + DBParadasHelper.TABLE_NAME + " ORDER BY id DESC;";
         Cursor cursor = read.rawQuery(sql, null);
 
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
 
             Paradas paradaDB = new Paradas();
 
@@ -109,7 +110,7 @@ public class ParadasDAO implements IParadasDAO{
             paradaDB.setId(paradaId);
             listParadas.add(paradaDB);
         }
-
+        cursor.close();
         return listParadas;
     }
 
@@ -118,10 +119,10 @@ public class ParadasDAO implements IParadasDAO{
     public List<Paradas> getAllData(String data) {
         List<Paradas> listParadas = new ArrayList<>();
 
-        String sql = "SELECT * FROM " + DBParadasHelper.TABLE_NAME + " WHERE data="+"'"+ data+"'" +" ORDER BY id DESC;";
+        String sql = "SELECT * FROM " + DBParadasHelper.TABLE_NAME + " WHERE data=" + "'" + data + "'" + " ORDER BY id DESC;";
         Cursor cursor = read.rawQuery(sql, null);
 
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
 
             Paradas paradaDB = new Paradas();
 
@@ -142,7 +143,7 @@ public class ParadasDAO implements IParadasDAO{
             paradaDB.setId(id);
             listParadas.add(paradaDB);
         }
-
+        cursor.close();
         return listParadas;
     }
 }

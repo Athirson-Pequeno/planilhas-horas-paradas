@@ -3,10 +3,7 @@ package com.example.planilhahorasparadas.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -14,10 +11,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -29,12 +24,11 @@ import com.example.planilhahorasparadas.adapter.ParadaAdapter;
 import com.example.planilhahorasparadas.helpers.ParadasDAO;
 import com.example.planilhahorasparadas.helpers.RetrofitControler;
 import com.example.planilhahorasparadas.models.Paradas;
+import com.example.planilhahorasparadas.util.MyApplication;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,29 +39,25 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount account;
     private static RecyclerView recyclerView;
-    private static ParadaAdapter adapter;
     private static List<Paradas> list = new ArrayList<>();
-    private Toolbar toolbar;
-    private static ImageButton buttonSync;
+    private ImageButton buttonSync;
     private EditText editText;
-    private EditText editTextH;
     private Spinner spinner;
     private RetrofitControler retrofitControler;
     private static String dataParada;
 
-    private static Context contextApp;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work);
+
         Intent intent = getIntent();
         dataParada = intent.getStringExtra("data");
 
-        contextApp = getApplicationContext();
 
-        toolbar = findViewById(R.id.toolbarDate);
+        Toolbar toolbar = findViewById(R.id.toolbarDate);
         toolbar.setTitle(dataParada);
         recyclerView = findViewById(R.id.recycleViewParadas);
         buttonSync = findViewById(R.id.imageButtonSync);
@@ -86,34 +76,29 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
         mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), googleSignInOptions);
 
         editText = findViewById(R.id.editTextObs);
-        editTextH = findViewById(R.id.editTextHoraF);
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if(id == EditorInfo.IME_ACTION_DONE){
-                    addParada();
-                }
-                return false;
+        EditText editTextH = findViewById(R.id.editTextHoraF);
+        editText.setOnEditorActionListener((textView, id, keyEvent) -> {
+            if (id == EditorInfo.IME_ACTION_DONE) {
+                return addParada();
             }
+            return false;
         });
 
-        editTextH.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if(id == EditorInfo.IME_ACTION_DONE){
-                    hidenKeyboard();
+        editTextH.setOnEditorActionListener((textView, id, keyEvent) -> {
+            if (id == EditorInfo.IME_ACTION_DONE) {
+                hiddenKeyboard();
 
-                    spinner.requestFocus();
-                    spinner.performClick();
-                }
-                return false;
+                spinner.requestFocus();
+                spinner.performClick();
             }
+            return false;
         });
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i != 0){
+                if (i != 0) {
                     editText.requestFocus();
                     editText.performClick();
                     showKeyboard();
@@ -130,22 +115,19 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.buttonSignOutSelect:
-                logOut();
-                break;
-            case R.id.buttonAdd:
-                addParada();
-                break;
-            case R.id.imageButtonSync:
-                addOnTable();
-                break;
+        if (view.getId() == R.id.buttonSignOutSelect){
+            logOut();
+        }
+        if (view.getId() == R.id.buttonAdd){
+            addParada();
+        }
+        if (view.getId() ==R.id.imageButtonSync){
+            addOnTable();
         }
     }
 
     private void addOnTable() {
-        spinButtonSync();
-        retrofitControler.saveParada(list, (account.getDisplayName() + " " + account.getEmail()) ,getApplicationContext());
+        retrofitControler.saveParada(list, (account.getDisplayName() + " " + account.getEmail()), getApplicationContext(), buttonSync);
     }
 
     private boolean addParada() {
@@ -159,42 +141,43 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
         String horaI = editHoraI.getText().toString();
         String horaF = editHoraF.getText().toString();
         String obs = editObs.getText().toString();
-        String cod = spinner.getSelectedItem().toString().substring(0,5);
+        String cod = spinner.getSelectedItem().toString().substring(0, 5);
 
-        if(spinner.getSelectedItemId() == 0){
+        if (spinner.getSelectedItemId() == 0) {
             cod = "";
         }
 
 
-        if((!cel.equals("")) && (!horaI.equals("")) && (!horaF.equals(""))&& (!cod.equals(""))){
+        if ((!cel.equals("")) && (!horaI.equals("")) && (!horaF.equals("")) && (!cod.equals(""))) {
 
-            if(Integer.valueOf(horaI) < Integer.valueOf(horaF)){
+            if (Integer.parseInt(horaI) < Integer.parseInt(horaF)) {
 
-            Paradas parada = new Paradas();
-            parada.setCelula(cel);
-            parada.setHoraI(Integer.valueOf(horaI));
-            parada.setHoraF(Integer.valueOf(horaF));
-            parada.setCod(cod);
-            parada.setObs(obs);
-            parada.setData(dataParada);
+                Paradas parada = new Paradas();
+                parada.setCelula(cel);
+                parada.setHoraI(Integer.parseInt(horaI));
+                parada.setHoraF(Integer.parseInt(horaF));
+                parada.setCod(cod);
+                parada.setObs(obs);
+                parada.setData(dataParada);
 
-            ParadasDAO paradasDAO = new ParadasDAO(getApplicationContext());
-            paradasDAO.save(parada);
-            setRecyclerView();
-
-
-            editCel.requestFocus();
-            editCel.performClick();
+                ParadasDAO paradasDAO = new ParadasDAO(getApplicationContext());
+                if (paradasDAO.save(parada)) {
+                    setRecyclerView();
 
 
-            editCel.setText("");
-            editHoraI.setText("");
-            editHoraF.setText("");
-            editObs.setText("");
-            spinner.setSelection(0);
+                    editCel.requestFocus();
+                    editCel.performClick();
 
-            return true;
-        }
+
+                    editCel.setText("");
+                    editHoraI.setText("");
+                    editHoraF.setText("");
+                    editObs.setText("");
+                    spinner.setSelection(0);
+
+                    return true;
+                }
+            }
             Toast.makeText(getApplicationContext(), "Hora inicial menor que hora final", Toast.LENGTH_LONG).show();
             return false;
         }
@@ -203,12 +186,12 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    private void hidenKeyboard(){
+    private void hiddenKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
-    private void showKeyboard(){
+    private void showKeyboard() {
 
         InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -216,12 +199,9 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
 
     private void logOut() {
         mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(getApplicationContext(),"Logout", Toast.LENGTH_LONG).show();
-                        openLoginActivity();
-                    }
+                .addOnCompleteListener(this, task -> {
+                    Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_LONG).show();
+                    openLoginActivity();
                 });
     }
 
@@ -234,38 +214,31 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
         GoogleSignInAccount currentAccount = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
-        if (currentAccount != null){
+        if (currentAccount != null) {
             account = currentAccount;
-
         }
         setRecyclerView();
     }
 
-    public static void setRecyclerView(){
-        ParadasDAO paradasDAO = new ParadasDAO(contextApp);
+    public static void setRecyclerView() {
+        ParadasDAO paradasDAO = new ParadasDAO(MyApplication.getAppContext());
         list = paradasDAO.getAllData(dataParada);
-
-        adapter = new ParadaAdapter(list);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(contextApp);
+        ParadaAdapter adapter = new ParadaAdapter(list);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyApplication.getAppContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(contextApp, LinearLayout.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(MyApplication.getAppContext(), LinearLayout.VERTICAL));
         recyclerView.setAdapter(adapter);
     }
 
-    private void spinButtonSync(){
-        Animation rotation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.button_spin);
-        buttonSync.startAnimation(rotation);
-    }
-    public static void stopBtnAnimation() {
-        buttonSync.clearAnimation();
-    }
 
     public static boolean deleteData(Paradas parada) {
-        ParadasDAO paradasDAO = new ParadasDAO(contextApp);
-        paradasDAO.delete(parada);
-        setRecyclerView();
-        return true;
+        ParadasDAO paradasDAO = new ParadasDAO(MyApplication.getAppContext());
+        if (paradasDAO.delete(parada)) {
+            setRecyclerView();
+            return true;
+        }
+        return false;
     }
 
 

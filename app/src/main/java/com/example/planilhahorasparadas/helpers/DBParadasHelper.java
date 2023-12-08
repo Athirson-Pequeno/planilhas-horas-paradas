@@ -20,7 +20,7 @@ public class DBParadasHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        String sql = "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME + "" +
+        String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "cel TEXT," +
                 "horaI INTEGER," +
@@ -31,9 +31,9 @@ public class DBParadasHelper extends SQLiteOpenHelper {
 
         try {
             sqLiteDatabase.execSQL(sql);
-            Log.i("INFO-DATABASE_PARADAS","table created");
-        }catch (Exception e){
-            Log.i("INFO-DATABASE_PARADAS","error create table: "+e.getMessage());
+            Log.i("INFO-DATABASE_PARADAS", "table " + TABLE_NAME + " created");
+        } catch (Exception e) {
+            Log.i("INFO-DATABASE_PARADAS", "error create table: " + e.getMessage());
         }
 
     }

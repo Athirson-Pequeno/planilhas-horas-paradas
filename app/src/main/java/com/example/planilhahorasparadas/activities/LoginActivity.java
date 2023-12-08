@@ -7,8 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,16 +41,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onStart();
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
         if(account != null){
-            openWorkActivity(account);
+            openSelectDataActivity(account);
         }
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.buttonLogin:
-                signIn();
-                break;
+        if(view.getId() == R.id.buttonLogin){
+            signIn();
         }
     }
 
@@ -61,17 +57,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         activityResultLauncher.launch(signInIntent);
     }
 
-    private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == Activity.RESULT_OK){
-                        Intent data = result.getData();
-                        if (data != null){
-                            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                            handleSignInResult(task);
-                        }
+            result -> {
+                if(result.getResultCode() == Activity.RESULT_OK){
+                    Intent data = result.getData();
+                    if (data != null){
+                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                        handleSignInResult(task);
                     }
                 }
             }
@@ -81,18 +74,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            openWorkActivity(account);
+            openSelectDataActivity(account);
             Toast.makeText(getApplicationContext(), "Logado com: " + account.getEmail(), Toast.LENGTH_LONG).show();
         } catch (ApiException e) {
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            Log.i(TAG, "Erro ao conectar: " + e.getStatusCode());
             Toast.makeText(getApplicationContext(), "Erro", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void openWorkActivity(GoogleSignInAccount account) {
+    private void openSelectDataActivity(GoogleSignInAccount account) {
         Intent intent = new Intent(this, SelectDateActivity.class);
-        intent.putExtra("accountEmail", account.getEmail().toString());
-        intent.putExtra("accountName", account.getDisplayName().toString());
+        intent.putExtra("accountEmail", account.getEmail());
+        intent.putExtra("accountName", account.getDisplayName());
         startActivity(intent);
     }
 }

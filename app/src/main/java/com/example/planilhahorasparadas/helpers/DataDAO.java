@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.planilhahorasparadas.models.Data;
-import com.example.planilhahorasparadas.models.Paradas;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +18,9 @@ public class DataDAO implements IDataDAO {
     private SQLiteDatabase read;
 
     public DataDAO(Context context) {
-        DBDataHelper dbDataHelper = new DBDataHelper(context);
-        this.write = dbDataHelper.getWritableDatabase();
-        this.read = dbDataHelper.getReadableDatabase();
+            DBDataHelper dbDataHelper = new DBDataHelper(context);
+            this.write = dbDataHelper.getWritableDatabase();
+            this.read = dbDataHelper.getReadableDatabase();
 
     }
 
@@ -78,7 +77,7 @@ public class DataDAO implements IDataDAO {
             listaData.add(novaData);
             
         }
-
+        cursor.close();
         return listaData;
     }
 }
