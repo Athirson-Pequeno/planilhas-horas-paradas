@@ -21,7 +21,7 @@
 
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbarDate"
+                android:id="@+id/toolbarRoutes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
@@ -43,18 +43,18 @@
                 android:padding="13dp"
                 android:src="@android:drawable/stat_notify_sync"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/buttonSignOutSelect"
+                app:layout_constraintEnd_toStartOf="@+id/buttonSignOutRoutes"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <Button
-                android:id="@+id/buttonSignOutSelect"
+                android:id="@+id/buttonSignOutRoutes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="Sair"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/toolbarDate"
+                app:layout_constraintEnd_toEndOf="@+id/toolbarRoutes"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -132,6 +132,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:entries="@array/tiposPessoa"
+            android:spinnerMode="dropdown"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -139,8 +140,8 @@
             app:layout_constraintStart_toEndOf="@+id/editTextHoraF"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5"
-            app:layout_constraintVertical_weight="1"
 
+            app:layout_constraintVertical_weight="1"
             tools:ignore="TouchTargetSizeCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

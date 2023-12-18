@@ -24,7 +24,7 @@ import com.example.planilhahorasparadas.adapter.ParadaAdapter;
 import com.example.planilhahorasparadas.helpers.ParadasDAO;
 import com.example.planilhahorasparadas.helpers.RetrofitControler;
 import com.example.planilhahorasparadas.models.Paradas;
-import com.example.planilhahorasparadas.util.MyApplication;
+import com.example.planilhahorasparadas.util.MyApplicationContext;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -53,11 +53,12 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work);
 
+
         Intent intent = getIntent();
         dataParada = intent.getStringExtra("data");
 
 
-        Toolbar toolbar = findViewById(R.id.toolbarDate);
+        Toolbar toolbar = findViewById(R.id.toolbarRoutes);
         toolbar.setTitle(dataParada);
         recyclerView = findViewById(R.id.recycleViewParadas);
         buttonSync = findViewById(R.id.imageButtonSync);
@@ -66,7 +67,7 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
         retrofitControler = new RetrofitControler();
 
         findViewById(R.id.buttonAdd).setOnClickListener(this);
-        findViewById(R.id.buttonSignOutSelect).setOnClickListener(this);
+        findViewById(R.id.buttonSignOutRoutes).setOnClickListener(this);
         findViewById(R.id.imageButtonSync).setOnClickListener(this);
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -115,7 +116,7 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.buttonSignOutSelect){
+        if (view.getId() == R.id.buttonSignOutRoutes){
             logOut();
         }
         if (view.getId() == R.id.buttonAdd){
@@ -221,19 +222,19 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public static void setRecyclerView() {
-        ParadasDAO paradasDAO = new ParadasDAO(MyApplication.getAppContext());
+        ParadasDAO paradasDAO = new ParadasDAO(MyApplicationContext.getAppContext());
         list = paradasDAO.getAllData(dataParada);
         ParadaAdapter adapter = new ParadaAdapter(list);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyApplication.getAppContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyApplicationContext.getAppContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(MyApplication.getAppContext(), LinearLayout.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(MyApplicationContext.getAppContext(), LinearLayout.VERTICAL));
         recyclerView.setAdapter(adapter);
     }
 
 
     public static boolean deleteData(Paradas parada) {
-        ParadasDAO paradasDAO = new ParadasDAO(MyApplication.getAppContext());
+        ParadasDAO paradasDAO = new ParadasDAO(MyApplicationContext.getAppContext());
         if (paradasDAO.delete(parada)) {
             setRecyclerView();
             return true;

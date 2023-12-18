@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .requestEmail()
                 .build();
 
+
         mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), googleSignInOptions);
     }
 
@@ -83,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void openSelectDataActivity(GoogleSignInAccount account) {
-        Intent intent = new Intent(this, SelectDateActivity.class);
+        Intent intent = new Intent(this, SelectRoute.class);
         intent.putExtra("accountEmail", account.getEmail());
         intent.putExtra("accountName", account.getDisplayName());
         startActivity(intent);

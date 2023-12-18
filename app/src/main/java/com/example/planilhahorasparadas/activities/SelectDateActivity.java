@@ -21,7 +21,7 @@ import com.example.planilhahorasparadas.adapter.DataAdapter;
 import com.example.planilhahorasparadas.helpers.DataDAO;
 import com.example.planilhahorasparadas.helpers.ParadasDAO;
 import com.example.planilhahorasparadas.models.Data;
-import com.example.planilhahorasparadas.util.MyApplication;
+import com.example.planilhahorasparadas.util.MyApplicationContext;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -42,13 +42,13 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_select_date);
         intent = getIntent();
         recyclerView = findViewById(R.id.recyclerViewData);
-        toolbar = findViewById(R.id.toolbarDate);
+        toolbar = findViewById(R.id.toolbarRoutes);
         editText = findViewById(R.id.editTextData);
 
-        dataDAO = new DataDAO(MyApplication.getAppContext());
+        dataDAO = new DataDAO(MyApplicationContext.getAppContext());
 
         findViewById(R.id.buttonAddData).setOnClickListener(this);
-        findViewById(R.id.buttonSignOutSelect).setOnClickListener(this);
+        findViewById(R.id.buttonSignOutRoutes).setOnClickListener(this);
 
 
         editText.setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -74,23 +74,22 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
                 hiddenKeyboard();
             }
         }
-        Toast.makeText(MyApplication.getAppContext(),"Preencha o campo nome da data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MyApplicationContext.getAppContext(),"Preencha o campo nome da data", Toast.LENGTH_SHORT).show();
     }
 
 
     public static void setRecyclerView() {
         List<Data> list = dataDAO.getAll();
         DataAdapter adapter = new DataAdapter(list);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyApplication.getAppContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyApplicationContext.getAppContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(MyApplication.getAppContext(), LinearLayout.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(MyApplicationContext.getAppContext(), LinearLayout.VERTICAL));
         recyclerView.setAdapter(adapter);
     }
 
     public void setToolbar() {
         toolbar.setTitle("Selection uma data e horário");
-        Toast.makeText(getApplicationContext(), "Conectado com " + intent.getStringExtra("accountEmail"), Toast.LENGTH_LONG).show();
     }
 
     private void logout() {
@@ -116,7 +115,7 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
     }
 
     public static boolean deleteData(Data data) {
-        ParadasDAO paradasDAO = new ParadasDAO(MyApplication.getAppContext());
+        ParadasDAO paradasDAO = new ParadasDAO(MyApplicationContext.getAppContext());
         if (dataDAO.delete(data)) {
             if (paradasDAO.deleteByData(data.getDataText())) {
                 setRecyclerView();
@@ -137,7 +136,7 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
         if (view.getId() == R.id.buttonAddData) {
             addData();
         }
-        if (view.getId() == R.id.buttonSignOutSelect) {
+        if (view.getId() == R.id.buttonSignOutRoutes) {
             logout();
         }
     }
