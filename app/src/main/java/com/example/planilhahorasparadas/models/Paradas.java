@@ -14,12 +14,21 @@ public class Paradas {
     public Integer horaI;
     public Integer id;
 
+    public Integer dataId;
     public String data;
     public Integer horaF;
     public String cod;
     public String obs;
     public Integer horario;
     public String user;
+
+    public Integer getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(Integer dataId) {
+        this.dataId = dataId;
+    }
 
     public String getCod() {
         return cod;
@@ -77,15 +86,6 @@ public class Paradas {
         this.user = user;
     }
 
-
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
 
     public void setId(Integer id) {
         this.id = id;

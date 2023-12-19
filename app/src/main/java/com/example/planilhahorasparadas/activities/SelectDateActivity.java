@@ -115,13 +115,10 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
     }
 
     public static boolean deleteData(Data data) {
-        ParadasDAO paradasDAO = new ParadasDAO(MyApplicationContext.getAppContext());
+
         if (dataDAO.delete(data)) {
-            if (paradasDAO.deleteByData(data.getDataText())) {
                 setRecyclerView();
                 return true;
-            }
-            return false;
         }
         return false;
     }

@@ -18,9 +18,9 @@ public class DataDAO implements IDataDAO {
     private SQLiteDatabase read;
 
     public DataDAO(Context context) {
-            DBDataHelper dbDataHelper = new DBDataHelper(context);
-            this.write = dbDataHelper.getWritableDatabase();
-            this.read = dbDataHelper.getReadableDatabase();
+            DBHelper dbHelper = new DBHelper(context);
+            this.write = dbHelper.getWritableDatabase();
+            this.read = dbHelper.getReadableDatabase();
 
     }
 
@@ -29,7 +29,7 @@ public class DataDAO implements IDataDAO {
         ContentValues contentValues = new ContentValues();
         contentValues.put("data", data.getDataText());
         try {
-            write.insert(DBDataHelper.TABLE_NAME, null, contentValues);
+            write.insert(DBHelper.DATA_TABLE_NAME, null, contentValues);
             Log.i("INFO", "Data Save");
         }catch (Exception e){
             Log.i("INFO", "Data not saved: "+e.getMessage());
@@ -47,9 +47,8 @@ public class DataDAO implements IDataDAO {
     @Override
     public boolean delete(Data data) {
         try {
-
             String[] args = {data.getId().toString()};
-            write.delete(DBDataHelper.TABLE_NAME, "id=?", args);
+            write.delete(DBHelper.DATA_TABLE_NAME, "id=?", args);
             Log.i("INFO", "Data deletada");
 
         }catch (Exception e){
@@ -64,7 +63,7 @@ public class DataDAO implements IDataDAO {
     public List<Data> getAll() {
         List<Data> listaData = new ArrayList<>();
 
-        String sql = "SELECT * FROM " + DBDataHelper.TABLE_NAME + " ORDER BY id DESC;";
+        String sql = "SELECT * FROM " + DBHelper.DATA_TABLE_NAME + " ORDER BY id DESC;";
         Cursor cursor = read.rawQuery(sql, null);
 
         while (cursor.moveToNext()){

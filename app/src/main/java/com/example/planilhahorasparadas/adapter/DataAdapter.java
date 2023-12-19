@@ -17,6 +17,7 @@ import com.example.planilhahorasparadas.activities.SelectDateActivity;
 import com.example.planilhahorasparadas.activities.WorkActivity;
 import com.example.planilhahorasparadas.models.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> {
@@ -47,7 +48,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
         holder.itemView.setOnClickListener(view -> {
 
             Intent intent = new Intent(context, WorkActivity.class);
-            intent.putExtra("data", data.getDataText());
+            intent.putExtra("data", data.dataText);
+            intent.putExtra("dataId", data.id);
             context.startActivity(intent);
 
         });
@@ -58,9 +60,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
                     .setMessage("Tem certeza que quer apagar a data " + data.getDataText() + " e todas as paradas relacionada a ela?")
                     .setPositiveButton("Sim", (dialog, which) -> {
                         SelectDateActivity.deleteData(data);
-                        if (SelectDateActivity.deleteData(data)) {
+                       // if (SelectDateActivity.deleteData(data)) {
                             Toast.makeText(context, "Data " + data.getDataText() + " apagada", Toast.LENGTH_LONG).show();
-                        }
+                       // }
                     })
                     .setNegativeButton("Não", null)
                     .setIcon(android.R.drawable.ic_dialog_alert)

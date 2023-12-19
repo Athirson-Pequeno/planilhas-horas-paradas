@@ -23,6 +23,7 @@ import com.example.planilhahorasparadas.R;
 import com.example.planilhahorasparadas.adapter.ParadaAdapter;
 import com.example.planilhahorasparadas.helpers.ParadasDAO;
 import com.example.planilhahorasparadas.helpers.RetrofitControler;
+import com.example.planilhahorasparadas.models.Data;
 import com.example.planilhahorasparadas.models.Paradas;
 import com.example.planilhahorasparadas.util.MyApplicationContext;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -45,6 +46,7 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
     private Spinner spinner;
     private RetrofitControler retrofitControler;
     private static String dataParada;
+    private static Integer dataId;
 
 
 
@@ -56,6 +58,7 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = getIntent();
         dataParada = intent.getStringExtra("data");
+        dataId = intent.getIntExtra("dataId", 0);
 
 
         Toolbar toolbar = findViewById(R.id.toolbarRoutes);
@@ -159,16 +162,14 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
                 parada.setHoraF(Integer.parseInt(horaF));
                 parada.setCod(cod);
                 parada.setObs(obs);
-                parada.setData(dataParada);
+                parada.setDataId(dataId);
 
                 ParadasDAO paradasDAO = new ParadasDAO(getApplicationContext());
                 if (paradasDAO.save(parada)) {
                     setRecyclerView();
 
-
                     editCel.requestFocus();
                     editCel.performClick();
-
 
                     editCel.setText("");
                     editHoraI.setText("");
@@ -223,7 +224,7 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
 
     public static void setRecyclerView() {
         ParadasDAO paradasDAO = new ParadasDAO(MyApplicationContext.getAppContext());
-        list = paradasDAO.getAllData(dataParada);
+        list = paradasDAO.getAllData(dataId);
         ParadaAdapter adapter = new ParadaAdapter(list);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyApplicationContext.getAppContext());
         recyclerView.setLayoutManager(layoutManager);

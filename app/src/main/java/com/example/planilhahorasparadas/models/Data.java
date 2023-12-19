@@ -1,6 +1,8 @@
 package com.example.planilhahorasparadas.models;
 
-public class Data {
+import java.io.Serializable;
+
+public class Data implements Serializable {
     public String dataText;
     public Integer id;
 
