@@ -26,6 +26,8 @@ public class GoogleSignInUtil {
                 .addOnCompleteListener(activity, task -> {
                     Toast.makeText(activity, "Logout", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(activity, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     activity.startActivity(intent);
                 });
     }

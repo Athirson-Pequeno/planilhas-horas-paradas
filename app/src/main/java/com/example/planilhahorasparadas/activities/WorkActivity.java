@@ -23,8 +23,8 @@ import com.example.planilhahorasparadas.R;
 import com.example.planilhahorasparadas.adapter.ParadaAdapter;
 import com.example.planilhahorasparadas.helpers.ParadasDAO;
 import com.example.planilhahorasparadas.helpers.RetrofitControler;
-import com.example.planilhahorasparadas.models.Data;
 import com.example.planilhahorasparadas.models.Paradas;
+import com.example.planilhahorasparadas.util.GoogleSignInUtil;
 import com.example.planilhahorasparadas.util.MyApplicationContext;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -45,7 +45,6 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
     private EditText editText;
     private Spinner spinner;
     private RetrofitControler retrofitControler;
-    private static String dataParada;
     private static Integer dataId;
 
 
@@ -57,7 +56,7 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
 
 
         Intent intent = getIntent();
-        dataParada = intent.getStringExtra("data");
+        String dataParada = intent.getStringExtra("data");
         dataId = intent.getIntExtra("dataId", 0);
 
 
@@ -203,13 +202,8 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, task -> {
                     Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_LONG).show();
-                    openLoginActivity();
+                    GoogleSignInUtil.logout(this);
                 });
-    }
-
-    private void openLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
     }
 
     @Override
@@ -242,6 +236,5 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
         }
         return false;
     }
-
 
 }

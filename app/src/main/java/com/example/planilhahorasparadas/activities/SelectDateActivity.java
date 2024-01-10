@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.planilhahorasparadas.R;
 import com.example.planilhahorasparadas.adapter.DataAdapter;
 import com.example.planilhahorasparadas.helpers.DataDAO;
-import com.example.planilhahorasparadas.helpers.ParadasDAO;
 import com.example.planilhahorasparadas.models.Data;
+import com.example.planilhahorasparadas.util.GoogleSignInUtil;
 import com.example.planilhahorasparadas.util.MyApplicationContext;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -31,7 +31,6 @@ import java.util.List;
 public class SelectDateActivity extends AppCompatActivity implements View.OnClickListener {
     private static RecyclerView recyclerView;
     private Toolbar toolbar;
-    private Intent intent;
     private GoogleSignInClient mGoogleSignInClient;
     private EditText editText;
     private static DataDAO dataDAO;
@@ -40,7 +39,6 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_date);
-        intent = getIntent();
         recyclerView = findViewById(R.id.recyclerViewData);
         toolbar = findViewById(R.id.toolbarRoutes);
         editText = findViewById(R.id.editTextData);
@@ -73,8 +71,9 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
                 setRecyclerView();
                 hiddenKeyboard();
             }
+        } else {
+            Toast.makeText(MyApplicationContext.getAppContext(), "Preencha o campo nome da data", Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(MyApplicationContext.getAppContext(),"Preencha o campo nome da data", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -96,14 +95,8 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, task -> {
                     Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_LONG).show();
-                    openLoginActivity();
+                    GoogleSignInUtil.logout(this);
                 });
-    }
-
-    private void openLoginActivity() {
-        Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
     }
 
     private void setMGoogleSignInClient() {
@@ -115,10 +108,9 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
     }
 
     public static boolean deleteData(Data data) {
-
         if (dataDAO.delete(data)) {
-                setRecyclerView();
-                return true;
+            setRecyclerView();
+            return true;
         }
         return false;
     }

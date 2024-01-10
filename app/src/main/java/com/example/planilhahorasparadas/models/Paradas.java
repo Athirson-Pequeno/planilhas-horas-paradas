@@ -12,15 +12,12 @@ public class Paradas {
     }
     public String celula;
     public Integer horaI;
-    public Integer id;
 
+    public Integer id;
     public Integer dataId;
-    public String data;
     public Integer horaF;
     public String cod;
     public String obs;
-    public Integer horario;
-    public String user;
 
     public Integer getDataId() {
         return dataId;
@@ -69,23 +66,6 @@ public class Paradas {
     public void setObs(String obs) {
         this.obs = obs;
     }
-
-    public Integer getHorario() {
-        return horario;
-    }
-
-    public void setHorario(Integer horario) {
-        this.horario = horario;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
 
     public void setId(Integer id) {
         this.id = id;
