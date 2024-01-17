@@ -3,6 +3,8 @@ package com.example.planilhahorasparadas.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -10,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -27,13 +30,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SelectDateActivity extends AppCompatActivity implements View.OnClickListener {
-    private static RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private Toolbar toolbar;
     private GoogleSignInClient mGoogleSignInClient;
     private EditText editText;
-    private static DataDAO dataDAO;
+    private DataDAO dataDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +68,19 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
     private void addData() {
         Data data = new Data();
         String dataText = editText.getText().toString();
-        data.setDataText(dataText);
+
         if (!dataText.equals("")) {
-            if (dataDAO.save(data)) {
-                editText.setText("");
+            data.setDataText(dataText);
+            try {
+                dataDAO.save(data);
                 setRecyclerView();
                 hiddenKeyboard();
+            } catch (Exception e) {
+                if (Objects.requireNonNull(e.getMessage()).contains("UNIQUE constraint failed")) {
+
+                    Toast.makeText(MyApplicationContext.getAppContext(), "Data já existente", Toast.LENGTH_SHORT).show();
+                }
+                Log.i("INFO", "Data not saved: " + e.getMessage());
             }
         } else {
             Toast.makeText(MyApplicationContext.getAppContext(), "Preencha o campo nome da data", Toast.LENGTH_SHORT).show();
@@ -77,9 +88,21 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-    public static void setRecyclerView() {
+    public void setRecyclerView() {
         List<Data> list = dataDAO.getAll();
-        DataAdapter adapter = new DataAdapter(list);
+        DataAdapter adapter = new DataAdapter(list, data -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Deletar data")
+                    .setMessage("Tem certeza que quer apagar a data " + data.getDataText() + " e todas as paradas relacionada a ela?")
+                    .setPositiveButton("Sim", (dialog, which) -> {
+                        if (deleteData(data)) {
+                            Toast.makeText(this, "Data " + data.getDataText() + " apagada", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .setNegativeButton("Não", null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        });
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyApplicationContext.getAppContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -91,13 +114,6 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
         toolbar.setTitle("Selection uma data e horário");
     }
 
-    private void logout() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, task -> {
-                    Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_LONG).show();
-                    GoogleSignInUtil.logout(this);
-                });
-    }
 
     private void setMGoogleSignInClient() {
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -107,7 +123,7 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
         mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), googleSignInOptions);
     }
 
-    public static boolean deleteData(Data data) {
+    public boolean deleteData(Data data) {
         if (dataDAO.delete(data)) {
             setRecyclerView();
             return true;
@@ -126,7 +142,7 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
             addData();
         }
         if (view.getId() == R.id.buttonSignOutRoutes) {
-            logout();
+            GoogleSignInUtil.logout(this);
         }
     }
 

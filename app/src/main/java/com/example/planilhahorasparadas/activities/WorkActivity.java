@@ -1,11 +1,9 @@
 package com.example.planilhahorasparadas.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -13,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -25,11 +24,10 @@ import com.example.planilhahorasparadas.helpers.ParadasDAO;
 import com.example.planilhahorasparadas.helpers.RetrofitControler;
 import com.example.planilhahorasparadas.models.Paradas;
 import com.example.planilhahorasparadas.util.GoogleSignInUtil;
+import com.example.planilhahorasparadas.util.KeyBoardController;
 import com.example.planilhahorasparadas.util.MyApplicationContext;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,16 +35,13 @@ import java.util.List;
 
 public class WorkActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount account;
-    private static RecyclerView recyclerView;
-    private static List<Paradas> list = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private List<Paradas> list = new ArrayList<>();
     private ImageButton buttonSync;
-    private EditText editText;
     private Spinner spinner;
     private RetrofitControler retrofitControler;
-    private static Integer dataId;
-
+    private Integer dataId;
 
 
     @Override
@@ -72,15 +67,10 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.buttonSignOutRoutes).setOnClickListener(this);
         findViewById(R.id.imageButtonSync).setOnClickListener(this);
 
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), googleSignInOptions);
-
-        editText = findViewById(R.id.editTextObs);
+        EditText editTextObs = findViewById(R.id.editTextObs);
         EditText editTextH = findViewById(R.id.editTextHoraF);
-        editText.setOnEditorActionListener((textView, id, keyEvent) -> {
+        editTextObs.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == EditorInfo.IME_ACTION_DONE) {
                 return addParada();
             }
@@ -89,7 +79,7 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
 
         editTextH.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == EditorInfo.IME_ACTION_DONE) {
-                hiddenKeyboard();
+                KeyBoardController.hiddenKeyboard();
 
                 spinner.requestFocus();
                 spinner.performClick();
@@ -102,9 +92,9 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i != 0) {
-                    editText.requestFocus();
-                    editText.performClick();
-                    showKeyboard();
+                    editTextObs.requestFocus();
+                    editTextObs.performClick();
+                    KeyBoardController.showKeyboard();
                 }
             }
 
@@ -118,13 +108,13 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.buttonSignOutRoutes){
-            logOut();
+        if (view.getId() == R.id.buttonSignOutRoutes) {
+            GoogleSignInUtil.logout(this);
         }
-        if (view.getId() == R.id.buttonAdd){
+        if (view.getId() == R.id.buttonAdd) {
             addParada();
         }
-        if (view.getId() ==R.id.imageButtonSync){
+        if (view.getId() == R.id.imageButtonSync) {
             addOnTable();
         }
     }
@@ -187,24 +177,6 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    private void hiddenKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-    }
-
-    private void showKeyboard() {
-
-        InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
-
-    private void logOut() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, task -> {
-                    Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_LONG).show();
-                    GoogleSignInUtil.logout(this);
-                });
-    }
 
     @Override
     protected void onStart() {
@@ -216,10 +188,20 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
         setRecyclerView();
     }
 
-    public static void setRecyclerView() {
+    public void setRecyclerView() {
         ParadasDAO paradasDAO = new ParadasDAO(MyApplicationContext.getAppContext());
         list = paradasDAO.getAllData(dataId);
-        ParadaAdapter adapter = new ParadaAdapter(list);
+        ParadaAdapter adapter = new ParadaAdapter(list, parada -> new AlertDialog.Builder(this)
+                .setTitle("Deletar data")
+                .setMessage("Tem certeza que quer apagar essa parada?")
+                .setPositiveButton("Sim", (dialog, which) -> {
+                    if (deleteData(parada)) {
+                        Toast.makeText(this, "Parada apagada", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton("Não", null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyApplicationContext.getAppContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -228,7 +210,7 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public static boolean deleteData(Paradas parada) {
+    public boolean deleteData(Paradas parada) {
         ParadasDAO paradasDAO = new ParadasDAO(MyApplicationContext.getAppContext());
         if (paradasDAO.delete(parada)) {
             setRecyclerView();

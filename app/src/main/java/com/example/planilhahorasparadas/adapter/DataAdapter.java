@@ -23,6 +23,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
 
     private Context context;
     private final List<Data> listaData;
+    private ItemClickListener itemClickListener;
+
+    public DataAdapter(List<Data> listaData, ItemClickListener itemClickListener) {
+        this.listaData = listaData;
+        this.itemClickListener = itemClickListener;
+    }
 
     public DataAdapter(List<Data> list) {
         this.listaData = list;
@@ -54,21 +60,19 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
         });
 
         holder.itemView.setOnLongClickListener(view -> {
-            new AlertDialog.Builder(context)
-                    .setTitle("Deletar data")
-                    .setMessage("Tem certeza que quer apagar a data " + data.getDataText() + " e todas as paradas relacionada a ela?")
-                    .setPositiveButton("Sim", (dialog, which) -> {
-                        if (SelectDateActivity.deleteData(data)) {
-                            Toast.makeText(context, "Data " + data.getDataText() + " apagada", Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .setNegativeButton("Não", null)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+
+            return true;
+        });
+
+        holder.itemView.setOnLongClickListener(view -> {
+            itemClickListener.onLongItemClick(data);
             return true;
         });
     }
 
+    public interface ItemClickListener{
+        void onLongItemClick(Data data);
+    }
     @Override
     public int getItemCount() {
         return this.listaData.size();

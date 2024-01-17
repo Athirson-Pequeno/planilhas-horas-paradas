@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -18,25 +19,18 @@ public class DataDAO implements IDataDAO {
     private SQLiteDatabase read;
 
     public DataDAO(Context context) {
-            DBHelper dbHelper = new DBHelper(context);
-            this.write = dbHelper.getWritableDatabase();
-            this.read = dbHelper.getReadableDatabase();
+        DBHelper dbHelper = new DBHelper(context);
+        this.write = dbHelper.getWritableDatabase();
+        this.read = dbHelper.getReadableDatabase();
 
     }
 
     @Override
-    public boolean save(Data data) {
+    public void save(Data data) throws Exception {
         ContentValues contentValues = new ContentValues();
         contentValues.put("data", data.getDataText());
-        try {
-            write.insert(DBHelper.DATA_TABLE_NAME, null, contentValues);
-            Log.i("INFO", "Data Save");
-        }catch (Exception e){
-            Log.i("INFO", "Data not saved: "+e.getMessage());
-            return false;
-        }
+        write.insertOrThrow(DBHelper.DATA_TABLE_NAME, null, contentValues);
 
-        return true;
     }
 
     @Override
@@ -51,9 +45,9 @@ public class DataDAO implements IDataDAO {
             write.delete(DBHelper.DATA_TABLE_NAME, "id=?", args);
             Log.i("INFO", "Data deletada");
 
-        }catch (Exception e){
-            Log.i("INFO", "Erro ao deletar"+ e.getMessage());
-            return  false;
+        } catch (Exception e) {
+            Log.i("INFO", "Erro ao deletar" + e.getMessage());
+            return false;
         }
 
         return true;
@@ -66,7 +60,7 @@ public class DataDAO implements IDataDAO {
         String sql = "SELECT * FROM " + DBHelper.DATA_TABLE_NAME + " ORDER BY id DESC;";
         Cursor cursor = read.rawQuery(sql, null);
 
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
 
             Data novaData = new Data();
             @SuppressLint("Range") String dataText = cursor.getString(cursor.getColumnIndex("data"));
@@ -74,7 +68,7 @@ public class DataDAO implements IDataDAO {
             novaData.setId(dataId);
             novaData.setDataText(dataText);
             listaData.add(novaData);
-            
+
         }
         cursor.close();
         return listaData;

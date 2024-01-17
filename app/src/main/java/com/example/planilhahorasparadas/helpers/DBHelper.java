@@ -24,7 +24,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String sql = "CREATE TABLE IF NOT EXISTS " + DATA_TABLE_NAME +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "data TEXT);";
+                "data TEXT," +
+                "UNIQUE (data));";
 
     String sql2 = "CREATE TABLE IF NOT EXISTS " + PARADA_TABLE_NAME +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT," +

@@ -24,11 +24,8 @@ import java.util.stream.Collectors;
 public class DialogPesquisaCores {
     private Dialog dialog;
     private TextView textView;
-
     private Context context;
-
     private List<Especificacoes> list = new ArrayList<>();
-
     public DialogPesquisaCores(Context context, List<Especificacoes> listItens) {
         this.list = listItens;
         this.context = context;

@@ -22,9 +22,15 @@ public class ParadaAdapter extends RecyclerView.Adapter<ParadaAdapter.MyViewHold
 
     private final List<Paradas> listaParadas;
     private Context context;
+    private ItemClickListener itemClickListener;
 
     public ParadaAdapter(List<Paradas> list) {
         this.listaParadas = list;
+    }
+
+    public ParadaAdapter(List<Paradas> listaParadas, ItemClickListener itemClickListener) {
+        this.listaParadas = listaParadas;
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -48,22 +54,14 @@ public class ParadaAdapter extends RecyclerView.Adapter<ParadaAdapter.MyViewHold
 
 
         holder.itemView.setOnLongClickListener(view -> {
-            new AlertDialog.Builder(context)
-                    .setTitle("Deletar data")
-                    .setMessage("Tem certeza que quer apagar essa parada?")
-                    .setPositiveButton("Sim", (dialog, which) -> {
-                        if (WorkActivity.deleteData(parada)) {
-                            Toast.makeText(context, "Parada apagada", Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .setNegativeButton("Não", null)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+            itemClickListener.onLongItemClick(parada);
             return true;
         });
-
     }
 
+    public interface ItemClickListener{
+        void onLongItemClick(Paradas parada);
+    }
     @Override
     public int getItemCount() {
         return this.listaParadas.size();
@@ -76,7 +74,6 @@ public class ParadaAdapter extends RecyclerView.Adapter<ParadaAdapter.MyViewHold
         TextView horaF;
         TextView obs;
         TextView cod;
-
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
