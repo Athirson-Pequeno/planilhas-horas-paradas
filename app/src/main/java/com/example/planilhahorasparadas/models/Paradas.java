@@ -10,14 +10,16 @@ public class Paradas {
 
     public Paradas() {
     }
-    public String celula;
-    public Integer horaI;
 
-    public Integer id;
-    public Integer dataId;
-    public Integer horaF;
-    public String cod;
-    public String obs;
+    private Integer id;
+    private String celula;
+    private Integer horaI;
+    private Integer horaF;
+    private String obs;
+    private String cod;
+    private Integer dataId;
+    private String horario;
+    private Boolean salvo = false;
 
     public Integer getDataId() {
         return dataId;
@@ -73,5 +75,23 @@ public class Paradas {
 
     public Integer getId() {
         return id;
+    }
+
+    public String getHorario() {
+        return horario;
+    }
+
+    public void setHorario(String horario) {
+        this.horario = horario;
+    }
+
+    public Boolean getSalvo() {
+        return salvo;
+    }
+    public void setSalvo(Boolean salvo) {
+        this.salvo = salvo;
+    }
+    public void setSalvo(Integer salvo) {
+        this.salvo = salvo == 1;
     }
 }

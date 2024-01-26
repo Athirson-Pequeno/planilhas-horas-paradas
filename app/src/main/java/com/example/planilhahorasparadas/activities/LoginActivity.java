@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void openSelectDataActivity(GoogleSignInAccount account) {
-        Intent intent = new Intent(this, SelectRoute.class);
+        Intent intent = new Intent(this, SelectDateActivity.class);
         intent.putExtra("accountEmail", account.getEmail());
         intent.putExtra("accountName", account.getDisplayName());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

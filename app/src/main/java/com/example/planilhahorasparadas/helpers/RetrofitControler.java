@@ -20,7 +20,8 @@ import retrofit2.Response;
 
 public class RetrofitControler {
     public String tableID;
-    public void saveParada(List<Paradas> parada, String user, Context context, ImageButton buttonSync){
+    public boolean saveParada(List<Paradas> parada, String user, Context context, ImageButton buttonSync){
+        final Boolean[] sucess = {false};
         spinButtonSync(context, buttonSync);
         RetrofitServiceInterface retrofitServiceInterface = RetrofitInstance.getRetrofitInstance().create(RetrofitServiceInterface.class);
         Call<ResponseCall> call = retrofitServiceInterface.saveParada(parada, user);
@@ -31,10 +32,12 @@ public class RetrofitControler {
                 if(response.isSuccessful()) {
                     stopBtnAnimation(buttonSync);
                     Toast.makeText(context, "Sucesso ao salvar.", Toast.LENGTH_LONG).show();
+                    sucess[0] = true;
                 } else {
                     stopBtnAnimation(buttonSync);
                     Toast.makeText(context, "Erro: " + response.message() , Toast.LENGTH_LONG).show();
                     Log.i("SAVE_ON_TABLE: ", response.message());
+                    sucess[0] = false;
                 }
             }
 
@@ -43,8 +46,11 @@ public class RetrofitControler {
                 stopBtnAnimation(buttonSync);
                 Toast.makeText(context, "Erro: " + t.getMessage(), Toast.LENGTH_LONG).show();
                 Log.i("SAVE_ON_TABLE: ", t.getMessage());
+                sucess[0] = false;
             }
         });
+
+        return sucess[0];
 
     }
 

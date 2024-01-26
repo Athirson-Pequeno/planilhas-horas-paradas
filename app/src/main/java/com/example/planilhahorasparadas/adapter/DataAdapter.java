@@ -23,10 +23,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
 
     private Context context;
     private final List<Data> listaData;
+    private LongItemClickListener longItemClickListener;
     private ItemClickListener itemClickListener;
 
-    public DataAdapter(List<Data> listaData, ItemClickListener itemClickListener) {
+    public DataAdapter(List<Data> listaData, LongItemClickListener longItemClickListener, ItemClickListener itemClickListener) {
         this.listaData = listaData;
+        this.longItemClickListener = longItemClickListener;
         this.itemClickListener = itemClickListener;
     }
 
@@ -50,28 +52,24 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
 
         holder.textData.setText(data.getDataText());
 
+
+        holder.itemView.setOnLongClickListener(view -> {
+            longItemClickListener.onLongItemClick(data);
+            return true;
+        });
+
         holder.itemView.setOnClickListener(view -> {
-
-            Intent intent = new Intent(context, WorkActivity.class);
-            intent.putExtra("data", data.dataText);
-            intent.putExtra("dataId", data.id);
-            context.startActivity(intent);
-
-        });
-
-        holder.itemView.setOnLongClickListener(view -> {
-
-            return true;
-        });
-
-        holder.itemView.setOnLongClickListener(view -> {
-            itemClickListener.onLongItemClick(data);
-            return true;
+            itemClickListener.onItemClick(data);
         });
     }
 
-    public interface ItemClickListener{
+    public interface LongItemClickListener{
         void onLongItemClick(Data data);
+    }
+
+    public interface ItemClickListener{
+        void onItemClick(Data data);
+
     }
     @Override
     public int getItemCount() {

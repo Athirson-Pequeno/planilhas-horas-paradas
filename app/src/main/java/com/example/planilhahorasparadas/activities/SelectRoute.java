@@ -19,7 +19,7 @@ public class SelectRoute extends AppCompatActivity implements View.OnClickListen
         findViewById(R.id.buttonHoras).setOnClickListener(this);
         findViewById(R.id.buttonInutilizado).setOnClickListener(this);
         findViewById(R.id.buttonSignOutRoutes).setOnClickListener(this);
-        findViewById(R.id.buttonCores).setOnClickListener(this);
+        findViewById(R.id.buttonConfiguracao).setOnClickListener(this);
 
     }
 
@@ -36,8 +36,8 @@ public class SelectRoute extends AppCompatActivity implements View.OnClickListen
         if(R.id.buttonSignOutRoutes == view.getId()){
             GoogleSignInUtil.logout(this);
         }
-        if(R.id.buttonCores == view.getId()){
-            Intent intent = new Intent(this, PesquisaCores.class);
+        if(R.id.buttonConfiguracao == view.getId()){
+            Intent intent = new Intent(this, ConfigActivity.class);
             startActivity(intent);
         }
     }

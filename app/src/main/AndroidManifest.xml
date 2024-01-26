@@ -18,6 +18,12 @@
         android:windowSoftInputMode="stateAlwaysVisible"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ConfigActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.FragmentsViewActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.PesquisaCores"
             android:exported="false" />
         <activity

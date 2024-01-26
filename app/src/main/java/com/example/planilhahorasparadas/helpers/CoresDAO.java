@@ -19,9 +19,9 @@ public class CoresDAO implements ICoresDAO{
     private SQLiteDatabase read;
 
     public CoresDAO(Context context) {
-        DBHelperAC dbHelperAC = new DBHelperAC(context);
-        this.write = dbHelperAC.getWritableDatabase();
-        this.read = dbHelperAC.getReadableDatabase();
+        DBHelper dbHelper = new DBHelper(context);
+        this.write = dbHelper.getWritableDatabase();
+        this.read = dbHelper.getReadableDatabase();
     }
 
     @Override
@@ -54,7 +54,7 @@ public class CoresDAO implements ICoresDAO{
     public List<Especificacoes> getAll() {
         List<Especificacoes> listaCores = new ArrayList<>();
 
-        String sql = "SELECT * FROM " + DBHelperAC.TABLE_CORES + " ORDER BY descricao;";
+        String sql = "SELECT * FROM " + DBHelper.CORES_TABLE_NAME + " ORDER BY descricao;";
         Cursor cursor = read.rawQuery(sql, null);
 
         while (cursor.moveToNext()){

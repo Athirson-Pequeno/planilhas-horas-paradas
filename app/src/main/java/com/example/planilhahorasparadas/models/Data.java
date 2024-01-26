@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class Data implements Serializable {
     public String dataText;
     public Integer id;
+    public static final long  serialVersionUID = 100L;
+
 
     public Integer getId() {
         return id;

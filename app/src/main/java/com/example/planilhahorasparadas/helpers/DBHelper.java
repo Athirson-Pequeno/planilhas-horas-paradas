@@ -8,10 +8,12 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 public class DBHelper extends SQLiteOpenHelper {
-    public static String DB_NAME = "DATABASE";
-    public static String DATA_TABLE_NAME = "data_table";
-    public static String PARADA_TABLE_NAME = "parada_table";
-    public static int VERSION = 1;
+    public static final String DB_NAME = "DATABASE";
+    public static final String DATA_TABLE_NAME = "data_table";
+    public static final String PARADA_TABLE_NAME = "parada_table";
+    public static String CORES_TABLE_NAME = "cores_table";
+    public static String ARTIGOS_TABLE_NAME = "artigos_table";
+    public static final int VERSION = 1;
 
     public DBHelper(@Nullable Context context) {
         super(context, DB_NAME, null, VERSION);
@@ -22,29 +24,58 @@ public class DBHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("PRAGMA foreign_keys=ON");
 
-        String sql = "CREATE TABLE IF NOT EXISTS " + DATA_TABLE_NAME +
-                "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "data TEXT," +
+        String sqlTabelaDatas = "CREATE TABLE IF NOT EXISTS " + DATA_TABLE_NAME +
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "data TEXT, " +
                 "UNIQUE (data));";
 
-    String sql2 = "CREATE TABLE IF NOT EXISTS " + PARADA_TABLE_NAME +
+        String sqlTabelaParadas = "CREATE TABLE IF NOT EXISTS " + PARADA_TABLE_NAME +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "cel TEXT," +
-                "horaI INTEGER," +
-                "horaF INTEGER," +
-                "obs TEXT," +
+                "cel TEXT, " +
+                "horaI INTEGER, " +
+                "horaF INTEGER ," +
+                "obs TEXT, " +
+                "cod TEXT, " +
+                "dataId INTEGER, " +
+                "horario TEXT, "+
+                "salvo BOOLEAN NOT NULL CHECK (salvo IN (0, 1)), "+
+                "FOREIGN KEY (dataId) REFERENCES " + DATA_TABLE_NAME + " (id) ON DELETE CASCADE);";
+
+
+        String sqlTabelaCores = "CREATE TABLE IF NOT EXISTS " + CORES_TABLE_NAME +
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "cod TEXT," +
-                "dataId INTEGER," +
-                "FOREIGN KEY (dataId) REFERENCES "+DATA_TABLE_NAME+" (id) ON DELETE CASCADE);";
+                "descricao TEXT);";
+
+        String sqlTabelaArtigos = "CREATE TABLE IF NOT EXISTS " + ARTIGOS_TABLE_NAME +
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "cod TEXT," +
+                "descricao TEXT);";
+
         try {
-            sqLiteDatabase.execSQL(sql);
-            Log.i("INFO-DATABASE_DATA", "table " + DATA_TABLE_NAME + " created");
+            sqLiteDatabase.execSQL(sqlTabelaDatas);
+            Log.i("INFO-DATABASE_DATA", "Tabela " + DATA_TABLE_NAME + " criada");
         } catch (Exception e) {
             Log.i("INFO-DATABASE_DATA", "error create table: " + e.getMessage());
         }
+
         try {
-            sqLiteDatabase.execSQL(sql2);
-            Log.i("INFO-DATABASE_DATA", "table " + PARADA_TABLE_NAME + " created");
+            sqLiteDatabase.execSQL(sqlTabelaParadas);
+            Log.i("INFO-DATABASE_DATA", "Tabela " + PARADA_TABLE_NAME + " criada");
+        } catch (Exception e) {
+            Log.i("INFO-DATABASE_DATA", "error create table: " + e.getMessage());
+        }
+
+        try {
+            sqLiteDatabase.execSQL(sqlTabelaCores);
+            Log.i("INFO-DATABASE_DATA", "Tabela " + CORES_TABLE_NAME + " criada");
+        } catch (Exception e) {
+            Log.i("INFO-DATABASE_DATA", "error create table: " + e.getMessage());
+        }
+
+        try {
+            sqLiteDatabase.execSQL(sqlTabelaArtigos);
+            Log.i("INFO-DATABASE_DATA", "Tabela " + PARADA_TABLE_NAME + " criada");
         } catch (Exception e) {
             Log.i("INFO-DATABASE_DATA", "error create table: " + e.getMessage());
         }

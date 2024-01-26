@@ -35,11 +35,11 @@ import java.util.List;
 
 public class WorkActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private GoogleSignInAccount account;
     private RecyclerView recyclerView;
     private List<Paradas> list = new ArrayList<>();
-    private ImageButton buttonSync;
     private Spinner spinner;
+    private GoogleSignInAccount account;
+    private ImageButton buttonSync;
     private RetrofitControler retrofitControler;
     private Integer dataId;
 

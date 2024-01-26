@@ -9,7 +9,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.planilhahorasparadas.R;
-import com.example.planilhahorasparadas.helpers.DBHelperAC;
+import com.example.planilhahorasparadas.helpers.DBHelper;
 import com.example.planilhahorasparadas.util.MyApplicationContext;
 
 import java.io.BufferedReader;
@@ -32,7 +32,7 @@ public class InitialActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(PRIMEIRA_EXECUCAO, MODE_PRIVATE);
 
-        DBHelperAC dbHelper = new DBHelperAC(MyApplicationContext.getAppContext());
+        DBHelper dbHelper = new DBHelper(MyApplicationContext.getAppContext());
         this.db = dbHelper.getWritableDatabase();
 
         executor.execute(this::carregarBanco);
@@ -46,11 +46,9 @@ public class InitialActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         if (sharedPreferences.getBoolean(PRIMEIRA_EXECUCAO, true)) {
-            sharedPreferences.edit().putBoolean(PRIMEIRA_EXECUCAO, false).apply();
             try {
                 insertFromFile(this, R.raw.datadb);
             } catch (IOException e) {
-
                 e.printStackTrace();
             }
             startActivity(intent);
@@ -65,10 +63,10 @@ public class InitialActivity extends AppCompatActivity {
         BufferedReader insertReader = new BufferedReader(new InputStreamReader(insertsStream));
 
         while (insertReader.ready()) {
-            String insertStmt = insertReader.readLine();
-            if (!insertStmt.equals("")){db.execSQL(insertStmt);}
-
+            String insertSting = insertReader.readLine();
+            if (!insertSting.equals("")){db.execSQL(insertSting);}
         }
+        sharedPreferences.edit().putBoolean(PRIMEIRA_EXECUCAO, false).apply();
         insertReader.close();
     }
 

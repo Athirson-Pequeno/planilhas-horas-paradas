@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.example.planilhahorasparadas.activities.LoginActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
@@ -30,5 +31,9 @@ public class GoogleSignInUtil {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     activity.startActivity(intent);
                 });
+    }
+
+    public static GoogleSignInAccount getAccount(){
+        return GoogleSignIn.getLastSignedInAccount(MyApplicationContext.getAppContext());
     }
 }

@@ -33,6 +33,8 @@ public class ParadasDAO implements IParadasDAO {
         contentValues.put("obs", parada.getObs());
         contentValues.put("cod", parada.getCod());
         contentValues.put("dataId", parada.getDataId());
+        contentValues.put("horario", parada.getHorario());
+        contentValues.put("salvo", 0);
 
         try {
             write.insert(DBHelper.PARADA_TABLE_NAME, null, contentValues);
@@ -65,66 +67,75 @@ public class ParadasDAO implements IParadasDAO {
         return true;
     }
 
-
     @Override
     public List<Paradas> getAll() {
 
-        List<Paradas> listParadas = new ArrayList<>();
 
         String sql = "SELECT * FROM " + DBHelper.PARADA_TABLE_NAME + " ORDER BY id DESC;";
-        Cursor cursor = read.rawQuery(sql, null);
+        return executarQuery(sql);
 
-        while (cursor.moveToNext()) {
-
-            Paradas paradaDB = new Paradas();
-
-            @SuppressLint("Range") String cel = cursor.getString(cursor.getColumnIndex("cel"));
-            @SuppressLint("Range") Integer horaI = cursor.getInt(cursor.getColumnIndex("horaI"));
-            @SuppressLint("Range") Integer horaF = cursor.getInt(cursor.getColumnIndex("horaF"));
-            @SuppressLint("Range") String obs = cursor.getString(cursor.getColumnIndex("obs"));
-            @SuppressLint("Range") String cod = cursor.getString(cursor.getColumnIndex("cod"));
-            @SuppressLint("Range") Integer paradaId = cursor.getInt(cursor.getColumnIndex("id"));
-            @SuppressLint("Range") Integer dataId = cursor.getInt(cursor.getColumnIndex("dataId"));
-
-            paradaDB.setCelula(cel);
-            paradaDB.setHoraI(horaI);
-            paradaDB.setHoraF(horaF);
-            paradaDB.setObs(obs);
-            paradaDB.setCod(cod);
-            paradaDB.setId(paradaId);
-            paradaDB.setDataId(dataId);
-            listParadas.add(paradaDB);
-        }
-        cursor.close();
-        return listParadas;
     }
-
 
     @Override
     public List<Paradas> getAllData(Integer dataID) {
-        List<Paradas> listParadas = new ArrayList<>();
+
         String sql = "SELECT * FROM " + DBHelper.PARADA_TABLE_NAME + " WHERE dataId=" + dataID + " ORDER BY id DESC;";
-        Cursor cursor = read.rawQuery(sql, null);
+        return executarQuery(sql);
+    }
+
+    @Override
+    public List<Paradas> buscarPorDataCelHorario(Integer dataID, String celula, String horarioSpinner) {
+
+        String sql = "SELECT * FROM " + DBHelper.PARADA_TABLE_NAME + " WHERE dataId= " + dataID + " AND cel= " + "'" + celula + "'" + " AND horario= " + "'" + horarioSpinner + "'" + " ORDER BY id DESC;";
+        return executarQuery(sql);
+
+    }
+    @Override
+    public List<Paradas> buscarNaoSalvos() {
+        String sql = "SELECT * FROM " + DBHelper.PARADA_TABLE_NAME + " WHERE salvo= 0;";
+        return executarQuery(sql);
+    }
+
+    public void atualizarNaoSalvos(Paradas paradas){
+        ContentValues cv =  new ContentValues();
+        cv.put("salvo",1);
+        try {
+            String[] args = {paradas.getId().toString()};
+            write.update(DBHelper.PARADA_TABLE_NAME,cv,"id=?",args);
+            Log.i("INFO", "Parada atualizada");
+        }catch (Exception e){
+            Log.i("INFO", "Erro ao atualizar parada: "+ e.getMessage());
+        }
+    }
+
+    private List<Paradas> executarQuery(String query) {
+        List<Paradas> listParadas = new ArrayList<>();
+        Cursor cursor = read.rawQuery(query, null);
 
         while (cursor.moveToNext()) {
 
             Paradas paradaDB = new Paradas();
 
+            @SuppressLint("Range") Integer paradaId = cursor.getInt(cursor.getColumnIndex("id"));
             @SuppressLint("Range") String cel = cursor.getString(cursor.getColumnIndex("cel"));
             @SuppressLint("Range") Integer horaI = cursor.getInt(cursor.getColumnIndex("horaI"));
             @SuppressLint("Range") Integer horaF = cursor.getInt(cursor.getColumnIndex("horaF"));
             @SuppressLint("Range") String obs = cursor.getString(cursor.getColumnIndex("obs"));
             @SuppressLint("Range") String cod = cursor.getString(cursor.getColumnIndex("cod"));
-            @SuppressLint("Range") Integer id = cursor.getInt(cursor.getColumnIndex("id"));
             @SuppressLint("Range") Integer dataId = cursor.getInt(cursor.getColumnIndex("dataId"));
+            @SuppressLint("Range") String horario = cursor.getString(cursor.getColumnIndex("horario"));
+            @SuppressLint("Range") Integer salvo = cursor.getInt(cursor.getColumnIndex("salvo"));
 
+            paradaDB.setId(paradaId);
             paradaDB.setCelula(cel);
             paradaDB.setHoraI(horaI);
             paradaDB.setHoraF(horaF);
             paradaDB.setObs(obs);
             paradaDB.setCod(cod);
-            paradaDB.setId(id);
             paradaDB.setDataId(dataId);
+            paradaDB.setHorario(horario);
+            paradaDB.setSalvo(salvo);
+
             listParadas.add(paradaDB);
         }
         cursor.close();

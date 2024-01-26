@@ -16,9 +16,9 @@ public class ArtigosDAO implements IArtigosDAO{
     private SQLiteDatabase write;
     private SQLiteDatabase read;
     public ArtigosDAO(Context context) {
-        DBHelperAC dbHelperAC = new DBHelperAC(context);
-        this.write = dbHelperAC.getWritableDatabase();
-        this.read = dbHelperAC.getReadableDatabase();
+        DBHelper dbHelper = new DBHelper(context);
+        this.write = dbHelper.getWritableDatabase();
+        this.read = dbHelper.getReadableDatabase();
     }
     @Override
     public boolean save(Paradas parada) {
@@ -39,7 +39,7 @@ public class ArtigosDAO implements IArtigosDAO{
     public List<Especificacoes> getAll() {
         List<Especificacoes> listaCores = new ArrayList<>();
 
-        String sql = "SELECT * FROM " + DBHelperAC.TABLE_ARTIGOS + " ORDER BY descricao;";
+        String sql = "SELECT * FROM " + DBHelper.ARTIGOS_TABLE_NAME + " ORDER BY descricao;";
         Cursor cursor = read.rawQuery(sql, null);
 
         while (cursor.moveToNext()){

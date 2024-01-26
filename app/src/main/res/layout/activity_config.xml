@@ -4,36 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.LoginActivity">
+    tools:context=".activities.ConfigActivity">
 
     <Button
-        android:id="@+id/buttonLogin"
+        android:id="@+id/buttonConfigCelulas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:drawableLeft="@drawable/common_google_signin_btn_icon_light"
-        android:gravity="center|center_horizontal|center_vertical"
-        android:text="Login com o Google"
-        android:textAlignment="gravity"
+        android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.471"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/editTextConfigCelulas"
         app:layout_constraintVertical_bias="0.5" />
 
-
-    <TextView
-        android:id="@+id/textView"
+    <EditText
+        android:id="@+id/editTextConfigCelulas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Controle de Digitação"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonLogin"
+        android:ems="10"
+        android:hint="Células"
+        android:inputType="text"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonConfigCelulas"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
         app:layout_constraintVertical_chainStyle="packed" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

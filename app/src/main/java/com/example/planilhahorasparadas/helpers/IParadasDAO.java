@@ -10,4 +10,6 @@ public interface IParadasDAO {
     boolean delete(Paradas parada);
     List<Paradas> getAll();
     List<Paradas> getAllData(Integer data);
+    List<Paradas> buscarPorDataCelHorario(Integer dataID, String celula, String horarioSpinner);
+    List<Paradas> buscarNaoSalvos();
 }

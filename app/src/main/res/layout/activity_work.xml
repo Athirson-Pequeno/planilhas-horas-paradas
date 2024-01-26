@@ -131,7 +131,7 @@
             android:id="@+id/spinner"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:entries="@array/tiposPessoa"
+            android:entries="@array/codigosParadas"
             android:spinnerMode="dropdown"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
