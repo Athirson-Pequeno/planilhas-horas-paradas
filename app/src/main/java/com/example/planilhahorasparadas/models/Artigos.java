@@ -1,5 +1,3 @@
 package com.example.planilhahorasparadas.models;
 
-public class Artigos extends Especificacoes{
-
-}
+public class Artigos extends Especificacoes{}

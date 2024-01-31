@@ -12,9 +12,7 @@ public class Celulas {
         return listaInutilizado;
     }
 
-    public void setListaInutilizado(List<Inutilizado> listaInutilizado) {
-        this.listaInutilizado = listaInutilizado;
-    }
+    public void setListaInutilizado(List<Inutilizado> listaInutilizado) {this.listaInutilizado = listaInutilizado;}
 
     public String getNumCel() {
         return numCel;

@@ -11,4 +11,6 @@ public interface IArtigosDAO {
     boolean update(Paradas parada);
     boolean delete(Paradas parada);
     List<Especificacoes> getAll();
+    List<Especificacoes> getById(Integer id);
+    List<Especificacoes> getByCod(String codigo);
 }

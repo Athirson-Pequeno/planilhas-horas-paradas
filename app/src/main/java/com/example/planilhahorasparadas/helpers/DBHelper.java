@@ -11,8 +11,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "DATABASE";
     public static final String DATA_TABLE_NAME = "data_table";
     public static final String PARADA_TABLE_NAME = "parada_table";
-    public static String CORES_TABLE_NAME = "cores_table";
-    public static String ARTIGOS_TABLE_NAME = "artigos_table";
+    public static final String PRODUCAO_TABLE_NAME = "producao_table";
+    public static final String CORES_TABLE_NAME = "cores_table";
+    public static final String ARTIGOS_TABLE_NAME = "artigos_table";
     public static final int VERSION = 1;
 
     public DBHelper(@Nullable Context context) {
@@ -21,6 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+
 
         sqLiteDatabase.execSQL("PRAGMA foreign_keys=ON");
 
@@ -37,8 +39,23 @@ public class DBHelper extends SQLiteOpenHelper {
                 "obs TEXT, " +
                 "cod TEXT, " +
                 "dataId INTEGER, " +
-                "horario TEXT, "+
-                "salvo BOOLEAN NOT NULL CHECK (salvo IN (0, 1)), "+
+                "horario TEXT, " +
+                "salvo BOOLEAN NOT NULL CHECK (salvo IN (0, 1)), " +
+                "FOREIGN KEY (dataId) REFERENCES " + DATA_TABLE_NAME + " (id) ON DELETE CASCADE);";
+
+        String sqlTabelaProducao = "CREATE TABLE IF NOT EXISTS " + PRODUCAO_TABLE_NAME +
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "celula TEXT, " +
+                "codigoCor TEXT, " +
+                "codigoArtigo TEXT, " +
+                "descricaoCor TEXT, " +
+                "descricaoArtigo TEXT, " +
+                "quantidadeProduzida INTEGER, " +
+                "idCor INTEGER, " +
+                "idArtigo INTEGER, " +
+                "dataId INTEGER, " +
+                "horario TEXT, " +
+                "salvo BOOLEAN NOT NULL CHECK (salvo IN (0, 1)), " +
                 "FOREIGN KEY (dataId) REFERENCES " + DATA_TABLE_NAME + " (id) ON DELETE CASCADE);";
 
 
@@ -62,6 +79,13 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             sqLiteDatabase.execSQL(sqlTabelaParadas);
             Log.i("INFO-DATABASE_DATA", "Tabela " + PARADA_TABLE_NAME + " criada");
+        } catch (Exception e) {
+            Log.i("INFO-DATABASE_DATA", "error create table: " + e.getMessage());
+        }
+
+        try {
+            sqLiteDatabase.execSQL(sqlTabelaProducao);
+            Log.i("INFO-DATABASE_DATA", "Tabela " + PRODUCAO_TABLE_NAME + " criada");
         } catch (Exception e) {
             Log.i("INFO-DATABASE_DATA", "error create table: " + e.getMessage());
         }

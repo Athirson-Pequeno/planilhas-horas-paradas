@@ -32,6 +32,9 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
     private Toolbar toolbar;
     private DataDAO dataDAO;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,8 +83,8 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show(), data -> {
             Intent intent = new Intent(this, FragmentsViewActivity.class);
-            intent.putExtra("data", data.dataText);
-            intent.putExtra("dataId", data.id);
+            intent.putExtra("data", data.getDataText());
+            intent.putExtra("dataId", data.getId());
             intent.putExtra("dataObject", data);
             this.startActivity(intent);
         });

@@ -1,6 +1,16 @@
 package com.example.planilhahorasparadas.models;
 
 public class Paradas {
+    private Integer id;
+    private String celula;
+    private Integer horaI;
+    private Integer horaF;
+    private String obs;
+    private String cod;
+    private Integer dataId;
+    private String horario;
+    private Boolean salvo;
+
     public Paradas(String celula, Integer horaI, Integer horaF, String cod) {
         this.celula = celula;
         this.horaI = horaI;
@@ -10,16 +20,6 @@ public class Paradas {
 
     public Paradas() {
     }
-
-    private Integer id;
-    private String celula;
-    private Integer horaI;
-    private Integer horaF;
-    private String obs;
-    private String cod;
-    private Integer dataId;
-    private String horario;
-    private Boolean salvo = false;
 
     public Integer getDataId() {
         return dataId;

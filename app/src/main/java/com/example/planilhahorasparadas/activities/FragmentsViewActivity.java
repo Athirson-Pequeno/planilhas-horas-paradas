@@ -98,16 +98,18 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
     public void iniciarFragmentos() {
 
         Fragment fragmentInutilizado = InutilizadoFragment.newInstance(data.getDataText(), data.getId().toString());
-        Fragment fragmentParadas = ParadasFragment.newInstance(data.id, spinnerCelulas.getSelectedItem().toString(), spinnerHorario.getSelectedItem().toString());
+        Fragment fragmentParadas = ParadasFragment.newInstance(data.getId(), spinnerCelulas.getSelectedItem().toString(), spinnerHorario.getSelectedItem().toString());
+        Fragment fragmentProducao = ProducaoFragment.newInstance(data.getId(), spinnerCelulas.getSelectedItem().toString(), spinnerHorario.getSelectedItem().toString());
 
         fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentInutilizado, INUTILIZADO_TAG).commit();
 
         fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentParadas, PARADA_TAG).commit();
 
-        fragmentManager.beginTransaction().add(R.id.frameLayout, new ProducaoFragment(), PRODUCAO_TAG).commit();
+        fragmentManager.beginTransaction().add(R.id.frameLayout, fragmentProducao, PRODUCAO_TAG).commit();
 
         fragmentManager.beginTransaction().hide(fragmentInutilizado).commit();
         fragmentManager.beginTransaction().hide(fragmentParadas).commit();
+        fragmentManager.beginTransaction().show(fragmentProducao).commit();
     }
 
     private void configurarBotoes() {

@@ -11,4 +11,6 @@ public interface ICoresDAO {
     boolean update(Cores cores);
     boolean delete(Cores cores);
     List<Especificacoes> getAll();
+    List<Especificacoes> getByID(Integer id);
+    List<Especificacoes> getByCod(String codigo);
 }

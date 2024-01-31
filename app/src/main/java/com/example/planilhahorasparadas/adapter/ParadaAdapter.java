@@ -19,7 +19,6 @@ import java.util.List;
 
 public class ParadaAdapter extends RecyclerView.Adapter<ParadaAdapter.MyViewHolder> {
 
-
     private final List<Paradas> listaParadas;
     private Context context;
     private ItemClickListener itemClickListener;
@@ -59,9 +58,10 @@ public class ParadaAdapter extends RecyclerView.Adapter<ParadaAdapter.MyViewHold
         });
     }
 
-    public interface ItemClickListener{
+    public interface ItemClickListener {
         void onLongItemClick(Paradas parada);
     }
+
     @Override
     public int getItemCount() {
         return this.listaParadas.size();
@@ -69,11 +69,7 @@ public class ParadaAdapter extends RecyclerView.Adapter<ParadaAdapter.MyViewHold
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView cel;
-        TextView horaI;
-        TextView horaF;
-        TextView obs;
-        TextView cod;
+        TextView cel, horaI, horaF, obs, cod;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,7 +79,6 @@ public class ParadaAdapter extends RecyclerView.Adapter<ParadaAdapter.MyViewHold
             horaF = itemView.findViewById(R.id.textHoraF);
             obs = itemView.findViewById(R.id.textObs);
             cod = itemView.findViewById(R.id.textCod);
-
 
         }
     }

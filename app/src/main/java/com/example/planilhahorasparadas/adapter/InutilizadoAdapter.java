@@ -13,10 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.planilhahorasparadas.R;
 import com.example.planilhahorasparadas.models.Celulas;
-import com.example.planilhahorasparadas.models.Inutilizado;
 import com.example.planilhahorasparadas.util.MyApplicationContext;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InutilizadoAdapter extends RecyclerView.Adapter<InutilizadoAdapter.MyViewHolder> {
@@ -42,16 +40,12 @@ public class InutilizadoAdapter extends RecyclerView.Adapter<InutilizadoAdapter.
         holder.numCel.setText(celulas.getNumCel());
         RecyclerView recyclerView = holder.recyclerView;
 
-
-
-
         InutilizadoRowAdapter inutilizadoRowAdapter = new InutilizadoRowAdapter(celulas.getListaInutilizado());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyApplicationContext.getAppContext(),LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(MyApplicationContext.getAppContext(), LinearLayout.HORIZONTAL));
         recyclerView.setAdapter(inutilizadoRowAdapter);
-
 
     }
 
@@ -61,7 +55,6 @@ public class InutilizadoAdapter extends RecyclerView.Adapter<InutilizadoAdapter.
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        
         TextView numCel;
         RecyclerView recyclerView;
         public MyViewHolder(@NonNull View itemView) {

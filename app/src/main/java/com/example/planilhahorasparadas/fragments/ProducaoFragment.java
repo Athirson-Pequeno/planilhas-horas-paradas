@@ -2,48 +2,68 @@ package com.example.planilhahorasparadas.fragments;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.planilhahorasparadas.R;
+import com.example.planilhahorasparadas.activities.FragmentsViewActivity;
+import com.example.planilhahorasparadas.activities.PesquisaCores;
+import com.example.planilhahorasparadas.adapter.ProducaoAdapter;
+import com.example.planilhahorasparadas.helpers.ArtigosDAO;
+import com.example.planilhahorasparadas.helpers.CoresDAO;
+import com.example.planilhahorasparadas.helpers.ProducaoDAO;
+import com.example.planilhahorasparadas.models.Artigos;
+import com.example.planilhahorasparadas.models.Cores;
+import com.example.planilhahorasparadas.models.Especificacoes;
+import com.example.planilhahorasparadas.models.Producao;
+import com.example.planilhahorasparadas.util.DialogPesquisaCores;
+import com.example.planilhahorasparadas.util.MyApplicationContext;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProducaoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class ProducaoFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "Producao1";
-    private static final String ARG_PARAM2 = "Producao2";
+    private RecyclerView recyclerView;
+    private List<Producao> list = new ArrayList<>();
+    private ImageButton buttonAdd;
+    private EditText editTextQuantide;
+    private List<Especificacoes> listaCores = new ArrayList<>();
+    private List<Especificacoes> listaArtigos = new ArrayList<>();
+    private static final String DATA_ID = "Data_id";
+    private static final String CELULA_SELECIONADA = "Celula_selecionada";
+    private static final String HORARIO_SELECIONADO = "Horario_selecionado";
+    private Integer dataId;
+    private String celulaSelecionada, horarioSelecionado;
+    private CoresDAO coresDAO = new CoresDAO(MyApplicationContext.getAppContext());
+    private ArtigosDAO artigosDAO = new ArtigosDAO(MyApplicationContext.getAppContext());
+    private DialogPesquisaCores dialogPesquisaCores, dialogPesquisaArtigos;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Integer idCor;
+    private Integer idArtigo;
 
     public ProducaoFragment() {
-        // Required empty public constructor
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProducaoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProducaoFragment newInstance(String param1, String param2) {
+
+    public static ProducaoFragment newInstance(Integer data, String celula, String horario) {
         ProducaoFragment fragment = new ProducaoFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(HORARIO_SELECIONADO, horario);
+        args.putString(CELULA_SELECIONADA, celula);
+        args.putInt(DATA_ID, data);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,15 +72,104 @@ public class ProducaoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            dataId = getArguments().getInt(DATA_ID);
+            celulaSelecionada = getArguments().getString(CELULA_SELECIONADA);
+            horarioSelecionado = getArguments().getString(HORARIO_SELECIONADO);
         }
+
+
+        listaCores = coresDAO.getAll();
+        listaArtigos = artigosDAO.getAll();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_producao, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_producao, container, false);
+        TextView textViewArtigos = view.findViewById(R.id.textViewArtigosFragmentProducao);
+        TextView textViewCores = view.findViewById(R.id.textViewCoresFragmentProducao);
+        buttonAdd = view.findViewById(R.id.buttonAddProducaoFragment);
+        recyclerView = view.findViewById(R.id.recyclerViewProducaoFragment);
+        editTextQuantide = view.findViewById(R.id.editTextQuantidadeFragmentProducao);
+
+        dialogPesquisaCores = new DialogPesquisaCores(getActivity(), listaCores);
+        dialogPesquisaArtigos = new DialogPesquisaCores(getActivity(), listaArtigos);
+
+        dialogPesquisaCores.MostrarDialog(getActivity(), textViewCores, getActivity());
+        dialogPesquisaArtigos.MostrarDialog(getActivity(), textViewArtigos, getActivity());
+
+
+        buttonAdd.setOnClickListener(viewOnClick -> addProducao());
+
+        ((FragmentsViewActivity) requireActivity()).setFragmentRefreshListener((dataIDAc, celula, horarioSpinner) -> {
+            dataId = dataIDAc;
+            celulaSelecionada = celula;
+            horarioSelecionado = horarioSpinner;
+            setRecyclerView(dataId, celulaSelecionada, horarioSelecionado);
+        });
+        return view;
+    }
+
+    private void setRecyclerView(Integer dataID, String celula, String horarioSpinner) {
+        ProducaoDAO producaoDAO = new ProducaoDAO(MyApplicationContext.getAppContext());
+        list = producaoDAO.buscarPorDataCelHorario(dataID, celula, horarioSpinner);
+
+        List<Producao> listDataCel = producaoDAO.buscarPorDataCel(dataID, celula);
+        if (!listDataCel.isEmpty()) {
+            dialogPesquisaArtigos.setTextView(artigosDAO.getById(listDataCel.get(0).getIdArtigo()).get(0));
+            dialogPesquisaCores.setTextView(coresDAO.getByID(listDataCel.get(0).getIdCor()).get(0));
+        }else {
+            dialogPesquisaArtigos.setTextViewDefault("Clique aqui para selcionar o artigo.");
+            dialogPesquisaCores.setTextViewDefault("Clique aqui para selcionar a cor.");
+        }
+
+        ProducaoAdapter adapter = new ProducaoAdapter(list, producao ->
+                new AlertDialog.Builder(requireActivity())
+                        .setTitle("Deletar data")
+                        .setMessage("Tem certeza que quer apagar essa parada?")
+                        .setPositiveButton("Sim", (dialog, which) -> {
+                            if (producaoDAO.delete(producao)) {
+                                Toast.makeText(requireActivity(), "Parada apagada", Toast.LENGTH_LONG).show();
+                                setRecyclerView(dataID, celula, horarioSpinner);
+                            }
+                        })
+                        .setNegativeButton("Não", null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show());
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyApplicationContext.getAppContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+
+
+    }
+
+    private void addProducao() {
+        Producao producao = new Producao();
+
+        idCor = dialogPesquisaCores.getItemId();
+        idArtigo = dialogPesquisaArtigos.getItemId();
+
+        Especificacoes corSelecionada = coresDAO.getByID(dialogPesquisaCores.getItemId()).get(0);
+        Especificacoes artigoSelecionado = artigosDAO.getById(dialogPesquisaArtigos.getItemId()).get(0);
+
+        producao.setIdCor(idCor);
+        producao.setIdArtigo(idArtigo);
+        producao.setCelula(celulaSelecionada);
+        producao.setHorario(horarioSelecionado);
+        producao.setDataId(dataId);
+        producao.setCodigoArtigo(artigoSelecionado.getCod());
+        producao.setDescricaoArtigo(artigoSelecionado.getDescricao());
+        producao.setCodigoCor(corSelecionada.getCod());
+        producao.setDescricaoCor(corSelecionada.getDescricao());
+        producao.setQuantidadeProduzida(Integer.valueOf(editTextQuantide.getText().toString()));
+
+        ProducaoDAO producaoDAO = new ProducaoDAO(MyApplicationContext.getAppContext());
+        producaoDAO.save(producao);
+        setRecyclerView(dataId, celulaSelecionada, horarioSelecionado);
+        editTextQuantide.setText("");
+
     }
 }

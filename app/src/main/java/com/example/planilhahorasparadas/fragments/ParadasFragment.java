@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -34,8 +35,8 @@ public class ParadasFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<Paradas> list = new ArrayList<>();
     private Spinner spinner;
-    private Button buttonAdd;
-    private EditText editTextCelula, editTextHoraInicial, editTextHoraFim, editTextObservacao;
+    private ImageButton buttonAdd;
+    private EditText  editTextHoraInicial, editTextHoraFim, editTextObservacao;
     private static final String DATA_ID = "Data_id";
     private static final String CELULA_SELECIONADA = "Celula_selecionada";
     private static final String HORARIO_SELECIONADO = "Horario_selecionado";
@@ -74,7 +75,6 @@ public class ParadasFragment extends Fragment {
         buttonAdd = view.findViewById(R.id.buttonAddFragmentParadas);
         recyclerView = view.findViewById(R.id.recycleViewParadasFragmentParadas);
         spinner = view.findViewById(R.id.spinnerCodParadasFragmentParadas);
-        editTextCelula = view.findViewById(R.id.editTextCelulaFragmentParadas);
         editTextHoraInicial = view.findViewById(R.id.editTextHoraInicialFragmentParadas);
         editTextHoraFim = view.findViewById(R.id.editTextHoraFimFragmentParadas);
         editTextObservacao = view.findViewById(R.id.editTextObservacaoFragmentParadas);
@@ -164,7 +164,6 @@ public class ParadasFragment extends Fragment {
                     editTextHoraInicial.requestFocus();
                     editTextHoraInicial.performClick();
 
-                    editTextCelula.setText("");
                     editTextHoraInicial.setText("");
                     editTextHoraFim.setText("");
                     editTextObservacao.setText("");
@@ -197,7 +196,6 @@ public class ParadasFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyApplicationContext.getAppContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(MyApplicationContext.getAppContext(), LinearLayout.VERTICAL));
         recyclerView.setAdapter(adapter);
     }
 

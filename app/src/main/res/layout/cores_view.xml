@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    android:background="#D6A9A9"
+    android:background="@drawable/fundo_item_recycler_view"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -11,12 +11,14 @@
         android:id="@+id/textViewCorCod"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="#000000" />
 
     <TextView
         android:id="@+id/textViewCorDescricao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="#000000" />
 
 </LinearLayout>

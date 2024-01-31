@@ -10,8 +10,10 @@ import android.widget.Toast;
 import com.example.planilhahorasparadas.R;
 import com.example.planilhahorasparadas.activities.WorkActivity;
 import com.example.planilhahorasparadas.models.Paradas;
+import com.example.planilhahorasparadas.models.Producao;
 import com.example.planilhahorasparadas.models.ResponseCall;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -20,11 +22,17 @@ import retrofit2.Response;
 
 public class RetrofitControler {
     public String tableID;
-    public boolean saveParada(List<Paradas> parada, String user, Context context, ImageButton buttonSync){
+    private HashMap<String, Object> map = new HashMap<>();
+
+    public boolean saveParada(List<Paradas> paradas, String user, Context context, ImageButton buttonSync){
+        Producao producao = new Producao();
+        map.put("paradas", paradas);
+        map.put("producao", producao);
+
         final Boolean[] sucess = {false};
         spinButtonSync(context, buttonSync);
         RetrofitServiceInterface retrofitServiceInterface = RetrofitInstance.getRetrofitInstance().create(RetrofitServiceInterface.class);
-        Call<ResponseCall> call = retrofitServiceInterface.saveParada(parada, user);
+        Call<ResponseCall> call = retrofitServiceInterface.saveParada(paradas,user);
         call.enqueue(new Callback<ResponseCall>() {
             @Override
             public void onResponse(Call<ResponseCall> call, Response<ResponseCall> response) {

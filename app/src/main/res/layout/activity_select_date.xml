@@ -61,7 +61,7 @@
             android:id="@+id/buttonCalendarPicker"
             android:layout_width="409dp"
             android:layout_height="wrap_content"
-            android:text="Selecione o dia do mês"
+            android:text="Clique aqui para selecionar o dia do mês"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

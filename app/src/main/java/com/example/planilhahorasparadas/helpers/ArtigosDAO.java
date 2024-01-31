@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.planilhahorasparadas.models.Artigos;
 import com.example.planilhahorasparadas.models.Cores;
 import com.example.planilhahorasparadas.models.Especificacoes;
 import com.example.planilhahorasparadas.models.Paradas;
@@ -37,25 +38,41 @@ public class ArtigosDAO implements IArtigosDAO{
 
     @Override
     public List<Especificacoes> getAll() {
-        List<Especificacoes> listaCores = new ArrayList<>();
-
         String sql = "SELECT * FROM " + DBHelper.ARTIGOS_TABLE_NAME + " ORDER BY descricao;";
-        Cursor cursor = read.rawQuery(sql, null);
 
-        while (cursor.moveToNext()){
+        return executarQuery(sql);
+    }
 
-            Cores novaCor = new Cores();
+    @Override
+    public List<Especificacoes> getById(Integer id) {
+        String sql = "SELECT * FROM " + DBHelper.ARTIGOS_TABLE_NAME + " WHERE id = " + id + " ORDER BY descricao;";
+        return executarQuery(sql);
+    }
+
+    @Override
+    public List<Especificacoes> getByCod(String codigo) {
+        return null;
+    }
+
+    private List<Especificacoes> executarQuery(String query) {
+        List<Especificacoes> listaArtigos = new ArrayList<>();
+
+        Cursor cursor = read.rawQuery(query, null);
+
+        while (cursor.moveToNext()) {
+
+            Artigos artigos = new Artigos();
             @SuppressLint("Range") String corCod = cursor.getString(cursor.getColumnIndex("cod"));
             @SuppressLint("Range") String corDescricao = cursor.getString(cursor.getColumnIndex("descricao"));
             @SuppressLint("Range") Integer corID = cursor.getInt(cursor.getColumnIndex("id"));
-            novaCor.setId(corID);
-            novaCor.setDescricao(corDescricao);
-            novaCor.setCod(corCod);
-            listaCores.add(novaCor);
+            artigos.setId(corID);
+            artigos.setDescricao(corDescricao);
+            artigos.setCod(corCod);
+            listaArtigos.add(artigos);
 
         }
 
         cursor.close();
-        return listaCores;
+        return listaArtigos;
     }
 }

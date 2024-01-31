@@ -76,8 +76,10 @@
         <Button
             android:id="@+id/buttonCelulaAnterior"
             android:layout_width="135dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:background="?attr/colorPrimary"
+            android:backgroundTint="#00000000"
+            android:drawableLeft="@drawable/baseline_arrow_circle_left_24"
             android:text="Anterior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/spinnerCelulas"
@@ -93,6 +95,7 @@
             android:spinnerMode="dialog"
             android:textAlignment="center"
             android:theme="@style/customtheme"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonProximaCelula"
             app:layout_constraintStart_toEndOf="@+id/buttonCelulaAnterior"
@@ -103,6 +106,7 @@
             android:layout_width="136dp"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
+            android:drawableRight="@drawable/baseline_arrow_circle_right_24"
             android:text="Próximo"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

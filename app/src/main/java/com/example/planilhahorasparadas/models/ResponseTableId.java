@@ -2,8 +2,8 @@ package com.example.planilhahorasparadas.models;
 
 public class ResponseTableId {
 
-    public String status;
-    public String cod;
+    private String status;
+    private String cod;
 
     public String getCod() {
         return cod;

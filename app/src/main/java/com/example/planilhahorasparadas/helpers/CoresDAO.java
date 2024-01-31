@@ -13,7 +13,7 @@ import com.example.planilhahorasparadas.models.Especificacoes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CoresDAO implements ICoresDAO{
+public class CoresDAO implements ICoresDAO {
 
     private SQLiteDatabase write;
     private SQLiteDatabase read;
@@ -32,8 +32,8 @@ public class CoresDAO implements ICoresDAO{
         try {
             write.insert(DBHelper.DATA_TABLE_NAME, null, contentValues);
             Log.i("INFO", "Sucesso ao salvar cor");
-        }catch (Exception e){
-            Log.i("INFO", "Erro ao salvar cor: "+e.getMessage());
+        } catch (Exception e) {
+            Log.i("INFO", "Erro ao salvar cor: " + e.getMessage());
             return false;
         }
 
@@ -52,12 +52,35 @@ public class CoresDAO implements ICoresDAO{
 
     @Override
     public List<Especificacoes> getAll() {
-        List<Especificacoes> listaCores = new ArrayList<>();
+
 
         String sql = "SELECT * FROM " + DBHelper.CORES_TABLE_NAME + " ORDER BY descricao;";
-        Cursor cursor = read.rawQuery(sql, null);
 
-        while (cursor.moveToNext()){
+
+        return executarQuery(sql);
+    }
+
+    @Override
+    public List<Especificacoes> getByID(Integer id) {
+
+        String sql = "SELECT * FROM " + DBHelper.CORES_TABLE_NAME + " WHERE id = " + id + " ORDER BY descricao;";
+
+        return executarQuery(sql);
+    }
+
+    @Override
+    public List<Especificacoes> getByCod(String codigo) {
+        String sql = "SELECT * FROM " + DBHelper.CORES_TABLE_NAME + " WHERE codigo = " + codigo + " ORDER BY descricao;";
+
+        return executarQuery(sql);
+    }
+
+    private List<Especificacoes> executarQuery(String query) {
+        List<Especificacoes> listaCores = new ArrayList<>();
+
+        Cursor cursor = read.rawQuery(query, null);
+
+        while (cursor.moveToNext()) {
 
             Cores novaCor = new Cores();
             @SuppressLint("Range") String corCod = cursor.getString(cursor.getColumnIndex("cod"));

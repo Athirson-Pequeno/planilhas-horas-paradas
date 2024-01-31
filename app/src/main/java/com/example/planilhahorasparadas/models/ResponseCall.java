@@ -2,7 +2,7 @@ package com.example.planilhahorasparadas.models;
 
 public class ResponseCall {
 
-    public String status;
+    private String status;
 
     public ResponseCall(String status) {
         this.status = status;

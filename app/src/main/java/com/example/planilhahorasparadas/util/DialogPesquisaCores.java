@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 public class DialogPesquisaCores {
     private Dialog dialog;
     private TextView textView;
-    private Context context;
     private List<Especificacoes> list = new ArrayList<>();
+    private Integer itemId = 0;
+
     public DialogPesquisaCores(Context context, List<Especificacoes> listItens) {
         this.list = listItens;
-        this.context = context;
     }
 
-    public void MostrarDialog(Context context, TextView textViewAc, Activity activity){
+    public void MostrarDialog(Context context, TextView textViewAc, Activity activity) {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -43,12 +43,12 @@ public class DialogPesquisaCores {
         textView.setOnClickListener(view -> {
             dialog = new Dialog(context);
             dialog.setContentView(R.layout.view_dialog_pesquisa);
-            Objects.requireNonNull(dialog.getWindow()).setLayout((int) Math.round(width * 0.85),(int) Math.round(height * 0.6));
+            Objects.requireNonNull(dialog.getWindow()).setLayout((int) Math.round(width * 0.85), (int) Math.round(height * 0.6));
             dialog.show();
 
 
-            PesquisaAdapater pesquisaAdapater = new PesquisaAdapater(list, especificacao ->{
-                textView.setText(especificacao.getCod() + " - " + especificacao.getDescricao() );
+            PesquisaAdapater pesquisaAdapater = new PesquisaAdapater(list, especificacao -> {
+                setTextView(especificacao);
                 dialog.dismiss();
             });
 
@@ -72,11 +72,13 @@ public class DialogPesquisaCores {
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                     List<Especificacoes> listaFiltro = list.stream().filter(c ->
-                            c.getDescricao().toLowerCase().contains(charSequence.toString().toLowerCase())).collect(Collectors.toList());
+                            (c.getCod() + c.getDescricao().toLowerCase()).contains(charSequence.toString().toLowerCase())).collect(Collectors.toList());
                     PesquisaAdapater novo = new PesquisaAdapater(listaFiltro, especificacao -> {
-                        textView.setText(especificacao.getCod() + " - " + especificacao.getDescricao());
+                        setTextView(especificacao);
                         dialog.dismiss();
+
                     });
+
                     recyclerView.setAdapter(novo);
                 }
 
@@ -84,10 +86,24 @@ public class DialogPesquisaCores {
                 public void afterTextChanged(Editable editable) {
 
                 }
-
-
             });
         });
+    }
 
+    public Integer getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Integer itemId) {
+        this.itemId = itemId;
+    }
+
+    public void setTextView(Especificacoes especificacao) {
+        textView.setText(String.format("%s - %s", especificacao.getCod(), especificacao.getDescricao()));
+        setItemId(especificacao.getId());
+    }
+
+    public void setTextViewDefault(String texto){
+        textView.setText(texto);
     }
 }
