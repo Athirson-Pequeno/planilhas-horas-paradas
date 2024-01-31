@@ -8,10 +8,10 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.planilhahorasparadas.R;
-import com.example.planilhahorasparadas.activities.WorkActivity;
 import com.example.planilhahorasparadas.models.Paradas;
 import com.example.planilhahorasparadas.models.Producao;
 import com.example.planilhahorasparadas.models.ResponseCall;
+import com.example.planilhahorasparadas.util.MyApplicationContext;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,44 +21,56 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RetrofitControler {
-    public String tableID;
-    private HashMap<String, Object> map = new HashMap<>();
 
-    public boolean saveParada(List<Paradas> paradas, String user, Context context, ImageButton buttonSync){
-        Producao producao = new Producao();
-        map.put("paradas", paradas);
-        map.put("producao", producao);
+    private boolean sucess;
 
-        final Boolean[] sucess = {false};
+    public boolean saveParada(HashMap map, String user, Context context, ImageButton buttonSync) {
+
         spinButtonSync(context, buttonSync);
         RetrofitServiceInterface retrofitServiceInterface = RetrofitInstance.getRetrofitInstance().create(RetrofitServiceInterface.class);
-        Call<ResponseCall> call = retrofitServiceInterface.saveParada(paradas,user);
+        Call<ResponseCall> call = retrofitServiceInterface.saveParada(map, user);
         call.enqueue(new Callback<ResponseCall>() {
             @Override
             public void onResponse(Call<ResponseCall> call, Response<ResponseCall> response) {
 
-                if(response.isSuccessful()) {
+                System.out.println(response.message());
+
+                if (response.code() == 200) {
                     stopBtnAnimation(buttonSync);
                     Toast.makeText(context, "Sucesso ao salvar.", Toast.LENGTH_LONG).show();
-                    sucess[0] = true;
+
+                    ParadasDAO paradasDAO = new ParadasDAO(MyApplicationContext.getAppContext());
+                    ProducaoDAO producaoDAO = new ProducaoDAO(MyApplicationContext.getAppContext());
+
+                    List<Producao> producao = (List<Producao>) map.get("producao");
+                    List<Paradas> paradas = (List<Paradas>) map.get("paradas");
+                    List<Paradas> paradas2 = (List<Paradas>) map.get("paradas2");
+
+                    if (paradas != null) {
+                        paradas.forEach(paradasDAO::atualizarNaoSalvos);
+                    }
+                    if (producao != null) {
+                        producao.forEach(producaoDAO::atualizarNaoSalvos);
+                    }
+
+                    sucess = true;
                 } else {
                     stopBtnAnimation(buttonSync);
-                    Toast.makeText(context, "Erro: " + response.message() , Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Erro: A " + response.message(), Toast.LENGTH_LONG).show();
                     Log.i("SAVE_ON_TABLE: ", response.message());
-                    sucess[0] = false;
+                    sucess = false;
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseCall> call, Throwable t) {
                 stopBtnAnimation(buttonSync);
-                Toast.makeText(context, "Erro: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Erro: B " + t.getMessage(), Toast.LENGTH_LONG).show();
                 Log.i("SAVE_ON_TABLE: ", t.getMessage());
-                sucess[0] = false;
+                sucess = false;
             }
         });
-
-        return sucess[0];
+        return sucess;
 
     }
 

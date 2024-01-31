@@ -102,7 +102,7 @@ public class ProducaoFragment extends Fragment {
 
         buttonAdd.setOnClickListener(viewOnClick -> addProducao());
 
-        ((FragmentsViewActivity) requireActivity()).setFragmentRefreshListener((dataIDAc, celula, horarioSpinner) -> {
+        ((FragmentsViewActivity) requireActivity()).setFragmentRefreshListener2((dataIDAc, celula, horarioSpinner) -> {
             dataId = dataIDAc;
             celulaSelecionada = celula;
             horarioSelecionado = horarioSpinner;
@@ -151,25 +151,30 @@ public class ProducaoFragment extends Fragment {
 
         idCor = dialogPesquisaCores.getItemId();
         idArtigo = dialogPesquisaArtigos.getItemId();
+        String quantidade = editTextQuantide.getText().toString();
 
-        Especificacoes corSelecionada = coresDAO.getByID(dialogPesquisaCores.getItemId()).get(0);
-        Especificacoes artigoSelecionado = artigosDAO.getById(dialogPesquisaArtigos.getItemId()).get(0);
+        if (!idArtigo.toString().equals("") && !idCor.toString().equals("") && !quantidade.equals("")){
+            Especificacoes corSelecionada = coresDAO.getByID(dialogPesquisaCores.getItemId()).get(0);
+            Especificacoes artigoSelecionado = artigosDAO.getById(dialogPesquisaArtigos.getItemId()).get(0);
 
-        producao.setIdCor(idCor);
-        producao.setIdArtigo(idArtigo);
-        producao.setCelula(celulaSelecionada);
-        producao.setHorario(horarioSelecionado);
-        producao.setDataId(dataId);
-        producao.setCodigoArtigo(artigoSelecionado.getCod());
-        producao.setDescricaoArtigo(artigoSelecionado.getDescricao());
-        producao.setCodigoCor(corSelecionada.getCod());
-        producao.setDescricaoCor(corSelecionada.getDescricao());
-        producao.setQuantidadeProduzida(Integer.valueOf(editTextQuantide.getText().toString()));
+            producao.setIdCor(idCor);
+            producao.setIdArtigo(idArtigo);
+            producao.setCelula(celulaSelecionada);
+            producao.setHorario(horarioSelecionado);
+            producao.setDataId(dataId);
+            producao.setCodigoArtigo(artigoSelecionado.getCod());
+            producao.setDescricaoArtigo(artigoSelecionado.getDescricao());
+            producao.setCodigoCor(corSelecionada.getCod());
+            producao.setDescricaoCor(corSelecionada.getDescricao());
+            producao.setQuantidadeProduzida(Integer.valueOf(quantidade));
 
-        ProducaoDAO producaoDAO = new ProducaoDAO(MyApplicationContext.getAppContext());
-        producaoDAO.save(producao);
-        setRecyclerView(dataId, celulaSelecionada, horarioSelecionado);
-        editTextQuantide.setText("");
+            ProducaoDAO producaoDAO = new ProducaoDAO(MyApplicationContext.getAppContext());
+            producaoDAO.save(producao);
+            setRecyclerView(dataId, celulaSelecionada, horarioSelecionado);
+            editTextQuantide.setText("");
+        }else {
+             Toast.makeText(requireActivity(), "Preencha todos os dados", Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

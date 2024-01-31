@@ -115,14 +115,14 @@ public class WorkActivity extends AppCompatActivity implements View.OnClickListe
             addParada();
         }
         if (view.getId() == R.id.imageButtonSync) {
-            addOnTable();
+           // addOnTable();
         }
     }
-
+/*
     private void addOnTable() {
         retrofitControler.saveParada(list, (account.getDisplayName() + " " + account.getEmail()), getApplicationContext(), buttonSync);
     }
-
+*/
     private boolean addParada() {
 
         EditText editCel = findViewById(R.id.editTextCel);

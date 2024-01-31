@@ -21,13 +21,16 @@ import com.example.planilhahorasparadas.fragments.InutilizadoFragment;
 import com.example.planilhahorasparadas.fragments.ParadasFragment;
 import com.example.planilhahorasparadas.fragments.ProducaoFragment;
 import com.example.planilhahorasparadas.helpers.ParadasDAO;
+import com.example.planilhahorasparadas.helpers.ProducaoDAO;
 import com.example.planilhahorasparadas.models.Data;
 import com.example.planilhahorasparadas.models.Paradas;
+import com.example.planilhahorasparadas.models.Producao;
 import com.example.planilhahorasparadas.util.MyApplicationContext;
 import com.example.planilhahorasparadas.util.UploadDataToSheets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,6 +45,7 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
     private Spinner spinnerCelulas, spinnerHorario;
     private List<String> listaCelulas = new ArrayList<>();
     private FragmentRefreshListener fragmentRefreshListener;
+    private FragmentRefreshListener2 fragmentRefreshListener2;
     private ImageButton imageButtonSync;
 
     @Override
@@ -71,6 +75,9 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
                 if (getFragmentRefreshListener() != null) {
                     getFragmentRefreshListener().onRefresh(data.getId(), spinnerCelulas.getSelectedItem().toString(), spinnerHorario.getSelectedItem().toString());
                 }
+                if (getFragmentRefreshListener2() != null) {
+                    getFragmentRefreshListener2().onRefresh(data.getId(), spinnerCelulas.getSelectedItem().toString(), spinnerHorario.getSelectedItem().toString());
+                }
             }
 
             @Override
@@ -84,6 +91,9 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (getFragmentRefreshListener() != null) {
                     getFragmentRefreshListener().onRefresh(data.getId(), spinnerCelulas.getSelectedItem().toString(), spinnerHorario.getSelectedItem().toString());
+                }
+                if (getFragmentRefreshListener2() != null) {
+                    getFragmentRefreshListener2().onRefresh(data.getId(), spinnerCelulas.getSelectedItem().toString(), spinnerHorario.getSelectedItem().toString());
                 }
             }
 
@@ -117,15 +127,28 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
         imageButtonSync = findViewById(R.id.imageButtonSyncFragments);
         imageButtonSync.setOnClickListener(view -> {
             ParadasDAO paradasDAO = new ParadasDAO(MyApplicationContext.getAppContext());
+            ProducaoDAO producaoDAO = new ProducaoDAO(MyApplicationContext.getAppContext());
+
             List<Paradas> paradasNaoSalvas = paradasDAO.buscarNaoSalvos();
-            if (paradasNaoSalvas.isEmpty()) {
+            List<Producao> producaoNaoSalvas = producaoDAO.buscarNaoSalvos();
+
+            HashMap<String, Object> map = new HashMap<>();
+
+            if (!paradasNaoSalvas.isEmpty()){
+
+                map.put("paradas", paradasNaoSalvas);
+            }
+
+            if (!producaoNaoSalvas.isEmpty()){
+                map.put("producao", producaoNaoSalvas);
+            }
+
+            if (paradasNaoSalvas.isEmpty() && producaoNaoSalvas.isEmpty()) {
                 Toast.makeText(this, "Todos itens já foram salvos", Toast.LENGTH_SHORT).show();
             } else {
                 UploadDataToSheets uploadDataToSheets = new UploadDataToSheets();
-                uploadDataToSheets.uploadParadas(paradasNaoSalvas, imageButtonSync);
-                paradasNaoSalvas.forEach(paradasDAO::atualizarNaoSalvos);
+                uploadDataToSheets.uploadParadas(map, imageButtonSync);
             }
-
         });
 
         buttonProducao = findViewById(R.id.buttonFragmentProducao);
@@ -147,6 +170,9 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
             if (getFragmentRefreshListener() != null) {
                 getFragmentRefreshListener().onRefresh(data.getId(), spinnerCelulas.getSelectedItem().toString(), spinnerHorario.getSelectedItem().toString());
             }
+            if (getFragmentRefreshListener2() != null) {
+                getFragmentRefreshListener2().onRefresh(data.getId(), spinnerCelulas.getSelectedItem().toString(), spinnerHorario.getSelectedItem().toString());
+            }
         });
 
         findViewById(R.id.buttonProximaCelula).setOnClickListener(view -> {
@@ -157,6 +183,9 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
             }
             if (getFragmentRefreshListener() != null) {
                 getFragmentRefreshListener().onRefresh(data.getId(), spinnerCelulas.getSelectedItem().toString(), spinnerHorario.getSelectedItem().toString());
+            }
+            if (getFragmentRefreshListener2() != null) {
+                getFragmentRefreshListener2().onRefresh(data.getId(), spinnerCelulas.getSelectedItem().toString(), spinnerHorario.getSelectedItem().toString());
             }
         });
 
@@ -222,6 +251,18 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
     }
 
     public interface FragmentRefreshListener {
+        void onRefresh(Integer dataID, String celula, String horarioSpinner);
+    }
+
+    public FragmentRefreshListener2 getFragmentRefreshListener2() {
+        return fragmentRefreshListener2;
+    }
+
+    public void setFragmentRefreshListener2(FragmentRefreshListener2 fragmentRefreshListener2) {
+        this.fragmentRefreshListener2 = fragmentRefreshListener2;
+    }
+
+    public interface FragmentRefreshListener2 {
         void onRefresh(Integer dataID, String celula, String horarioSpinner);
     }
 

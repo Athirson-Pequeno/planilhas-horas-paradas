@@ -1,8 +1,5 @@
 package com.example.planilhahorasparadas.helpers;
 
-import com.example.planilhahorasparadas.models.Cores;
-import com.example.planilhahorasparadas.models.Especificacoes;
-import com.example.planilhahorasparadas.models.Paradas;
 import com.example.planilhahorasparadas.models.Producao;
 
 import java.util.List;
@@ -15,4 +12,6 @@ public interface IProducaoDAO {
     List<Producao> buscarPorDataCelHorario(Integer dataID, String celula, String horarioSpinner);
 
     List<Producao> buscarPorDataCel(Integer dataID, String celula);
+
+    List<Producao> buscarNaoSalvos();
 }

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.planilhahorasparadas.models.Paradas;
 import com.example.planilhahorasparadas.models.Producao;
 
 import java.util.ArrayList;
@@ -86,6 +87,24 @@ public class ProducaoDAO implements IProducaoDAO{
         return executarQuery(sql);
     }
 
+    @Override
+    public List<Producao> buscarNaoSalvos() {
+        String sql = "SELECT * FROM " + DBHelper.PRODUCAO_TABLE_NAME + " WHERE salvo= 0;";
+        return executarQuery(sql);
+    }
+
+    public void atualizarNaoSalvos(Producao producao){
+        ContentValues cv =  new ContentValues();
+        cv.put("salvo",1);
+        try {
+            String[] args = {producao.getId().toString()};
+            write.update(DBHelper.PRODUCAO_TABLE_NAME,cv,"id=?",args);
+            Log.i("INFO", "Parada atualizada");
+        }catch (Exception e){
+            Log.i("INFO", "Erro ao atualizar parada: "+ e.getMessage());
+        }
+    }
+
     private List<Producao> executarQuery(String query) {
         List<Producao> listProducao = new ArrayList<>();
         Cursor cursor =  read.rawQuery(query, null);
@@ -124,5 +143,6 @@ public class ProducaoDAO implements IProducaoDAO{
         cursor.close();
         return listProducao;
     }
+
 
 }
