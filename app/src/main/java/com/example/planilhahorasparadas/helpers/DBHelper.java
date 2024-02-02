@@ -50,6 +50,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "codigoArtigo TEXT, " +
                 "descricaoCor TEXT, " +
                 "descricaoArtigo TEXT, " +
+                "tamanho TEXT, " +
                 "quantidadeProduzida INTEGER, " +
                 "idCor INTEGER, " +
                 "idArtigo INTEGER, " +

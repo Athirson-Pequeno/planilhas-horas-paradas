@@ -43,6 +43,7 @@ public class ProducaoAdapter extends RecyclerView.Adapter<ProducaoAdapter.MyView
         holder.descArtigo.setText(producao.getDescricaoArtigo());
         holder.descCor.setText(producao.getDescricaoCor());
         holder.quantidade.setText(String.valueOf(producao.getQuantidadeProduzida()));
+        holder.tamanho.setText(producao.getTamanho());
 
         holder.itemView.setOnLongClickListener(view -> {
             itemClickListener.onLongItemClick(producao);
@@ -60,7 +61,7 @@ public class ProducaoAdapter extends RecyclerView.Adapter<ProducaoAdapter.MyView
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView cel, codCor, codArtigo, descCor, descArtigo, quantidade;
+        TextView cel, codCor, codArtigo, descCor, descArtigo, quantidade, tamanho;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             cel = itemView.findViewById(R.id.textViewCelFragmentProducao);
@@ -69,6 +70,7 @@ public class ProducaoAdapter extends RecyclerView.Adapter<ProducaoAdapter.MyView
             descCor = itemView.findViewById(R.id.textViewDesCorFragmentProducao);
             descArtigo = itemView.findViewById(R.id.textViewDesArtigoFragmentProducao);
             quantidade = itemView.findViewById(R.id.textViewQuantidadeFragmentProducao);
+            tamanho = itemView.findViewById(R.id.textViewTamahoFragmentProducao);
 
         }
     }

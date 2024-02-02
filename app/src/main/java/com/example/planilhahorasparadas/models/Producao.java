@@ -13,6 +13,7 @@ public class Producao {
     private Integer dataId;
     private String horario;
     private Boolean salvo;
+    private String tamanho;
 
     public Integer getId() {
         return id;
@@ -84,6 +85,14 @@ public class Producao {
 
     public void setHorario(String horario) {
         this.horario = horario;
+    }
+
+    public String getTamanho() {
+        return tamanho;
+    }
+
+    public void setTamanho(String tamanho) {
+        this.tamanho = tamanho;
     }
 
     public Boolean getSalvo() {

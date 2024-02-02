@@ -44,12 +44,12 @@
                 android:padding="13dp"
                 android:src="@android:drawable/stat_notify_sync"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/buttonSignOutRoutes"
+                app:layout_constraintEnd_toStartOf="@+id/buttonSignOutFragmentView"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <Button
-                android:id="@+id/buttonSignOutRoutes"
+                android:id="@+id/buttonSignOutFragmentView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"

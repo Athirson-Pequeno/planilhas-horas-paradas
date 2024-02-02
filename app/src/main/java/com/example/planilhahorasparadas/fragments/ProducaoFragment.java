@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,8 @@ import com.example.planilhahorasparadas.util.DialogPesquisaCores;
 import com.example.planilhahorasparadas.util.MyApplicationContext;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -49,9 +53,11 @@ public class ProducaoFragment extends Fragment {
     private CoresDAO coresDAO = new CoresDAO(MyApplicationContext.getAppContext());
     private ArtigosDAO artigosDAO = new ArtigosDAO(MyApplicationContext.getAppContext());
     private DialogPesquisaCores dialogPesquisaCores, dialogPesquisaArtigos;
-
     private Integer idCor;
     private Integer idArtigo;
+    private Spinner spinnerTamanho;
+
+    private List<String> itensSpinnerTamanho = new ArrayList<>();
 
     public ProducaoFragment() {
 
@@ -85,13 +91,22 @@ public class ProducaoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_producao, container, false);
+
+        itensSpinnerTamanho.addAll(Arrays.asList("Tamanho","23/4","25/6","27/8","29/0","31/2","33/4","35/6","37/8","39/0","41/2","43/4","45/6","47/8"));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, itensSpinnerTamanho);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTamanho = view.findViewById(R.id.spinnerTamanho);
+        spinnerTamanho.setAdapter(adapter);
+
+
+
         TextView textViewArtigos = view.findViewById(R.id.textViewArtigosFragmentProducao);
         TextView textViewCores = view.findViewById(R.id.textViewCoresFragmentProducao);
         buttonAdd = view.findViewById(R.id.buttonAddProducaoFragment);
         recyclerView = view.findViewById(R.id.recyclerViewProducaoFragment);
         editTextQuantide = view.findViewById(R.id.editTextQuantidadeFragmentProducao);
+
 
         dialogPesquisaCores = new DialogPesquisaCores(getActivity(), listaCores);
         dialogPesquisaArtigos = new DialogPesquisaCores(getActivity(), listaArtigos);
@@ -106,6 +121,7 @@ public class ProducaoFragment extends Fragment {
             dataId = dataIDAc;
             celulaSelecionada = celula;
             horarioSelecionado = horarioSpinner;
+
             setRecyclerView(dataId, celulaSelecionada, horarioSelecionado);
         });
         return view;
@@ -119,9 +135,11 @@ public class ProducaoFragment extends Fragment {
         if (!listDataCel.isEmpty()) {
             dialogPesquisaArtigos.setTextView(artigosDAO.getById(listDataCel.get(0).getIdArtigo()).get(0));
             dialogPesquisaCores.setTextView(coresDAO.getByID(listDataCel.get(0).getIdCor()).get(0));
+            spinnerTamanho.setSelection(itensSpinnerTamanho.indexOf(listDataCel.get(0).getTamanho()));
         }else {
             dialogPesquisaArtigos.setTextViewDefault("Clique aqui para selcionar o artigo.");
             dialogPesquisaCores.setTextViewDefault("Clique aqui para selcionar a cor.");
+            spinnerTamanho.setSelection(0);
         }
 
         ProducaoAdapter adapter = new ProducaoAdapter(list, producao ->
@@ -153,10 +171,13 @@ public class ProducaoFragment extends Fragment {
         idArtigo = dialogPesquisaArtigos.getItemId();
         String quantidade = editTextQuantide.getText().toString();
 
-        if (!idArtigo.toString().equals("") && !idCor.toString().equals("") && !quantidade.equals("")){
+        String tamanho = spinnerTamanho.getSelectedItem().toString();
+
+        if (!idArtigo.toString().equals("") && !idCor.toString().equals("") && !quantidade.equals("") && !tamanho.equals("Tamanho")){
             Especificacoes corSelecionada = coresDAO.getByID(dialogPesquisaCores.getItemId()).get(0);
             Especificacoes artigoSelecionado = artigosDAO.getById(dialogPesquisaArtigos.getItemId()).get(0);
 
+            producao.setTamanho(tamanho);
             producao.setIdCor(idCor);
             producao.setIdArtigo(idArtigo);
             producao.setCelula(celulaSelecionada);

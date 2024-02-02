@@ -35,6 +35,7 @@ public class ProducaoDAO implements IProducaoDAO{
         contentValues.put("horario", producao.getHorario());
         contentValues.put("idCor", producao.getIdCor());
         contentValues.put("idArtigo", producao.getIdArtigo());
+        contentValues.put("tamanho", producao.getTamanho());
         contentValues.put("salvo", 0);
 
 
@@ -124,6 +125,7 @@ public class ProducaoDAO implements IProducaoDAO{
             @SuppressLint("Range") Integer idArtigo = cursor.getInt(cursor.getColumnIndex("idArtigo"));
             @SuppressLint("Range") String horario = cursor.getString(cursor.getColumnIndex("horario"));
             @SuppressLint("Range") Integer salvo = cursor.getInt(cursor.getColumnIndex("salvo"));
+            @SuppressLint("Range") String tamanho = cursor.getString(cursor.getColumnIndex("tamanho"));
 
             producaoDB.setId(producaoID);
             producaoDB.setCelula(celula);
@@ -136,6 +138,7 @@ public class ProducaoDAO implements IProducaoDAO{
             producaoDB.setHorario(horario);
             producaoDB.setIdArtigo(idArtigo);
             producaoDB.setIdCor(idCor);
+            producaoDB.setTamanho(tamanho);
             producaoDB.setSalvo(salvo);
 
             listProducao.add(producaoDB);

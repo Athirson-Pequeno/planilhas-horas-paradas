@@ -30,17 +30,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         findViewById(R.id.buttonLogin).setOnClickListener(this);
 
+        findViewById(R.id.buttonLogin).setOnLongClickListener(view -> {
+            signIn();
+            return true;
+        });
+
+        findViewById(R.id.buttonConfiguracaoLogin).setOnClickListener(view -> {
+            Intent intent = new Intent(this, ConfigActivity.class);
+            startActivity(intent);
+        });
+
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
 
         mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), googleSignInOptions);
+
+
     }
 
     protected void onStart() {
         super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
+       GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
         if(account != null){
             openSelectDataActivity(account);
         }
@@ -49,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.buttonLogin){
-            signIn();
+           signIn();
         }
     }
 
@@ -61,11 +73,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
+                System.out.println(result.getResultCode());
                 if(result.getResultCode() == Activity.RESULT_OK){
                     Intent data = result.getData();
+                    System.out.println(result.getData());
                     if (data != null){
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                         handleSignInResult(task);
+
                     }
                 }
             }
@@ -83,10 +98,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void openSelectDataActivity(GoogleSignInAccount account) {
+    private void openSelectDataActivity(GoogleSignInAccount signInCredential) {
         Intent intent = new Intent(this, SelectDateActivity.class);
-        intent.putExtra("accountEmail", account.getEmail());
-        intent.putExtra("accountName", account.getDisplayName());
+        intent.putExtra("accountEmail", signInCredential.getEmail());
+        intent.putExtra("accountName", signInCredential.getDisplayName());
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

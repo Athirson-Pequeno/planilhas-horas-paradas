@@ -68,15 +68,16 @@
     </string-array>
 
     <string-array name="horarios">
-        <item>1 Horário </item>
-        <item>2 Horário </item>
-        <item>3 Horário </item>
-        <item>4 Horário </item>
-        <item>5 Horário </item>
-        <item>6 Horário </item>
-        <item>7 Horário </item>
-        <item>8 Horário </item>
+        <item>1 Horário</item>
+        <item>2 Horário</item>
+        <item>3 Horário</item>
+        <item>4 Horário</item>
+        <item>5 Horário</item>
+        <item>6 Horário</item>
+        <item>7 Horário</item>
+        <item>8 Horário</item>
     </string-array>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

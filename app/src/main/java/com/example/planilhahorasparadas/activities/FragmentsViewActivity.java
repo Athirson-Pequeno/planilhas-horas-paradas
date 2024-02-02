@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import com.example.planilhahorasparadas.helpers.ProducaoDAO;
 import com.example.planilhahorasparadas.models.Data;
 import com.example.planilhahorasparadas.models.Paradas;
 import com.example.planilhahorasparadas.models.Producao;
+import com.example.planilhahorasparadas.util.GoogleSignInUtil;
 import com.example.planilhahorasparadas.util.MyApplicationContext;
 import com.example.planilhahorasparadas.util.UploadDataToSheets;
 
@@ -37,7 +39,7 @@ import java.util.Objects;
 public class FragmentsViewActivity extends AppCompatActivity implements View.OnClickListener {
     SharedPreferences sharedPreferences = null;
     private final FragmentManager fragmentManager = getSupportFragmentManager();
-    private Button buttonProducao, buttonParadas, buttonInutilizado;
+    private Button buttonProducao, buttonParadas, buttonInutilizado, buttonSignOut;
     private Data data;
     private final String PRODUCAO_TAG = "producao";
     private final String PARADA_TAG = "paradas";
@@ -56,6 +58,7 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
         data = (Data) getIntent().getSerializableExtra("dataObject");
         Toolbar toolbar = findViewById(R.id.toolbarFragments);
         toolbar.setTitle("Dia: " + data.getDataText());
+
 
         sharedPreferences = getSharedPreferences(ConfigActivity.CONFIGURACOES, MODE_PRIVATE);
         spinnerCelulas = findViewById(R.id.spinnerCelulas);
@@ -134,14 +137,12 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
 
             HashMap<String, Object> map = new HashMap<>();
 
-            if (!paradasNaoSalvas.isEmpty()){
 
-                map.put("paradas", paradasNaoSalvas);
-            }
+            map.put("paradas", paradasNaoSalvas);
 
-            if (!producaoNaoSalvas.isEmpty()){
-                map.put("producao", producaoNaoSalvas);
-            }
+
+            map.put("producao", producaoNaoSalvas);
+
 
             if (paradasNaoSalvas.isEmpty() && producaoNaoSalvas.isEmpty()) {
                 Toast.makeText(this, "Todos itens já foram salvos", Toast.LENGTH_SHORT).show();
@@ -189,6 +190,7 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
             }
         });
 
+        findViewById(R.id.buttonSignOutFragmentView).setOnClickListener(view -> GoogleSignInUtil.logout(this));
     }
 
     @Override
