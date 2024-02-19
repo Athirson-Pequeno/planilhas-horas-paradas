@@ -19,21 +19,17 @@ import android.widget.Toast;
 
 import com.example.planilhahorasparadas.R;
 import com.example.planilhahorasparadas.activities.FragmentsViewActivity;
-import com.example.planilhahorasparadas.activities.PesquisaCores;
 import com.example.planilhahorasparadas.adapter.ProducaoAdapter;
 import com.example.planilhahorasparadas.helpers.ArtigosDAO;
 import com.example.planilhahorasparadas.helpers.CoresDAO;
 import com.example.planilhahorasparadas.helpers.ProducaoDAO;
-import com.example.planilhahorasparadas.models.Artigos;
-import com.example.planilhahorasparadas.models.Cores;
 import com.example.planilhahorasparadas.models.Especificacoes;
 import com.example.planilhahorasparadas.models.Producao;
-import com.example.planilhahorasparadas.util.DialogPesquisaCores;
+import com.example.planilhahorasparadas.util.DialogPesquisaEspecificacoes;
 import com.example.planilhahorasparadas.util.MyApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -42,7 +38,7 @@ public class ProducaoFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<Producao> list = new ArrayList<>();
     private ImageButton buttonAdd;
-    private EditText editTextQuantide;
+    private EditText editTextQuantidade;
     private List<Especificacoes> listaCores = new ArrayList<>();
     private List<Especificacoes> listaArtigos = new ArrayList<>();
     private static final String DATA_ID = "Data_id";
@@ -52,17 +48,15 @@ public class ProducaoFragment extends Fragment {
     private String celulaSelecionada, horarioSelecionado;
     private CoresDAO coresDAO = new CoresDAO(MyApplicationContext.getAppContext());
     private ArtigosDAO artigosDAO = new ArtigosDAO(MyApplicationContext.getAppContext());
-    private DialogPesquisaCores dialogPesquisaCores, dialogPesquisaArtigos;
+    private DialogPesquisaEspecificacoes dialogPesquisaEspecificacoes, dialogPesquisaArtigos;
     private Integer idCor;
     private Integer idArtigo;
     private Spinner spinnerTamanho;
-
     private List<String> itensSpinnerTamanho = new ArrayList<>();
 
     public ProducaoFragment() {
 
     }
-
 
     public static ProducaoFragment newInstance(Integer data, String celula, String horario) {
         ProducaoFragment fragment = new ProducaoFragment();
@@ -105,14 +99,14 @@ public class ProducaoFragment extends Fragment {
         TextView textViewCores = view.findViewById(R.id.textViewCoresFragmentProducao);
         buttonAdd = view.findViewById(R.id.buttonAddProducaoFragment);
         recyclerView = view.findViewById(R.id.recyclerViewProducaoFragment);
-        editTextQuantide = view.findViewById(R.id.editTextQuantidadeFragmentProducao);
+        editTextQuantidade = view.findViewById(R.id.editTextQuantidadeFragmentProducao);
 
 
-        dialogPesquisaCores = new DialogPesquisaCores(getActivity(), listaCores);
-        dialogPesquisaArtigos = new DialogPesquisaCores(getActivity(), listaArtigos);
+        dialogPesquisaEspecificacoes = new DialogPesquisaEspecificacoes(listaCores);
+        dialogPesquisaArtigos = new DialogPesquisaEspecificacoes(listaArtigos);
 
-        dialogPesquisaCores.MostrarDialog(getActivity(), textViewCores, getActivity());
-        dialogPesquisaArtigos.MostrarDialog(getActivity(), textViewArtigos, getActivity());
+        dialogPesquisaEspecificacoes.MostrarDialog(getActivity(), textViewCores, requireActivity());
+        dialogPesquisaArtigos.MostrarDialog(getActivity(), textViewArtigos, requireActivity());
 
 
         buttonAdd.setOnClickListener(viewOnClick -> addProducao());
@@ -134,21 +128,21 @@ public class ProducaoFragment extends Fragment {
         List<Producao> listDataCel = producaoDAO.buscarPorDataCel(dataID, celula);
         if (!listDataCel.isEmpty()) {
             dialogPesquisaArtigos.setTextView(artigosDAO.getById(listDataCel.get(0).getIdArtigo()).get(0));
-            dialogPesquisaCores.setTextView(coresDAO.getByID(listDataCel.get(0).getIdCor()).get(0));
+            dialogPesquisaEspecificacoes.setTextView(coresDAO.getByID(listDataCel.get(0).getIdCor()).get(0));
             spinnerTamanho.setSelection(itensSpinnerTamanho.indexOf(listDataCel.get(0).getTamanho()));
         }else {
-            dialogPesquisaArtigos.setTextViewDefault("Clique aqui para selcionar o artigo.");
-            dialogPesquisaCores.setTextViewDefault("Clique aqui para selcionar a cor.");
+            dialogPesquisaArtigos.setTextViewDefault("Clique aqui para selecionar o artigo.");
+            dialogPesquisaEspecificacoes.setTextViewDefault("Clique aqui para selecionar a cor.");
             spinnerTamanho.setSelection(0);
         }
 
         ProducaoAdapter adapter = new ProducaoAdapter(list, producao ->
                 new AlertDialog.Builder(requireActivity())
                         .setTitle("Deletar data")
-                        .setMessage("Tem certeza que quer apagar essa parada?")
+                        .setMessage("Tem certeza que quer apagar essa produção?")
                         .setPositiveButton("Sim", (dialog, which) -> {
                             if (producaoDAO.delete(producao)) {
-                                Toast.makeText(requireActivity(), "Parada apagada", Toast.LENGTH_LONG).show();
+                                Toast.makeText(requireActivity(), "Produção apagada.", Toast.LENGTH_LONG).show();
                                 setRecyclerView(dataID, celula, horarioSpinner);
                             }
                         })
@@ -167,14 +161,14 @@ public class ProducaoFragment extends Fragment {
     private void addProducao() {
         Producao producao = new Producao();
 
-        idCor = dialogPesquisaCores.getItemId();
+        idCor = dialogPesquisaEspecificacoes.getItemId();
         idArtigo = dialogPesquisaArtigos.getItemId();
-        String quantidade = editTextQuantide.getText().toString();
+        String quantidade = editTextQuantidade.getText().toString();
 
         String tamanho = spinnerTamanho.getSelectedItem().toString();
 
         if (!idArtigo.toString().equals("") && !idCor.toString().equals("") && !quantidade.equals("") && !tamanho.equals("Tamanho")){
-            Especificacoes corSelecionada = coresDAO.getByID(dialogPesquisaCores.getItemId()).get(0);
+            Especificacoes corSelecionada = coresDAO.getByID(dialogPesquisaEspecificacoes.getItemId()).get(0);
             Especificacoes artigoSelecionado = artigosDAO.getById(dialogPesquisaArtigos.getItemId()).get(0);
 
             producao.setTamanho(tamanho);
@@ -192,9 +186,9 @@ public class ProducaoFragment extends Fragment {
             ProducaoDAO producaoDAO = new ProducaoDAO(MyApplicationContext.getAppContext());
             producaoDAO.save(producao);
             setRecyclerView(dataId, celulaSelecionada, horarioSelecionado);
-            editTextQuantide.setText("");
+            editTextQuantidade.setText("");
         }else {
-             Toast.makeText(requireActivity(), "Preencha todos os dados", Toast.LENGTH_SHORT).show();
+             Toast.makeText(requireActivity(), "Preencha todos os dados.", Toast.LENGTH_SHORT).show();
         }
 
     }

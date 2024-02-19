@@ -9,18 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.planilhahorasparadas.R;
-import com.example.planilhahorasparadas.models.Paradas;
 import com.example.planilhahorasparadas.models.Producao;
 
 import java.util.List;
 
 public class ProducaoAdapter extends RecyclerView.Adapter<ProducaoAdapter.MyViewHolder> {
 
-    private final List<Producao> listProducao;
-    private ItemClickListener itemClickListener;
+    private final List<Producao> lista;
+    private final ItemClickListener itemClickListener;
 
-    public ProducaoAdapter(List<Producao> listProducao, ItemClickListener itemClickListener) {
-        this.listProducao = listProducao;
+    public ProducaoAdapter(List<Producao> lista, ItemClickListener itemClickListener) {
+        this.lista = lista;
         this.itemClickListener = itemClickListener;
     }
 
@@ -31,12 +30,12 @@ public class ProducaoAdapter extends RecyclerView.Adapter<ProducaoAdapter.MyView
                 R.layout.producao_view_adapter, parent, false
         );
 
-        return new ProducaoAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProducaoAdapter.MyViewHolder holder, int position) {
-        Producao producao = listProducao.get(position);
+        Producao producao = lista.get(position);
         holder.cel.setText(producao.getCelula());
         holder.codArtigo.setText(producao.getCodigoArtigo());
         holder.codCor.setText(producao.getCodigoCor());
@@ -53,15 +52,16 @@ public class ProducaoAdapter extends RecyclerView.Adapter<ProducaoAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return this.listProducao.size();
+        return this.lista.size();
     }
 
-    public interface ItemClickListener{
+    public interface ItemClickListener {
         void onLongItemClick(Producao producao);
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView cel, codCor, codArtigo, descCor, descArtigo, quantidade, tamanho;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             cel = itemView.findViewById(R.id.textViewCelFragmentProducao);

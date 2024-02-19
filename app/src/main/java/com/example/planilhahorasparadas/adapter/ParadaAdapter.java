@@ -1,34 +1,25 @@
 package com.example.planilhahorasparadas.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.planilhahorasparadas.R;
-import com.example.planilhahorasparadas.activities.WorkActivity;
 import com.example.planilhahorasparadas.models.Paradas;
 
 import java.util.List;
 
 public class ParadaAdapter extends RecyclerView.Adapter<ParadaAdapter.MyViewHolder> {
 
-    private final List<Paradas> listaParadas;
-    private Context context;
-    private ItemClickListener itemClickListener;
+    private final List<Paradas> lista;
+    private final ItemClickListener itemClickListener;
 
-    public ParadaAdapter(List<Paradas> list) {
-        this.listaParadas = list;
-    }
-
-    public ParadaAdapter(List<Paradas> listaParadas, ItemClickListener itemClickListener) {
-        this.listaParadas = listaParadas;
+    public ParadaAdapter(List<Paradas> lista, ItemClickListener itemClickListener) {
+        this.lista = lista;
         this.itemClickListener = itemClickListener;
     }
 
@@ -44,7 +35,7 @@ public class ParadaAdapter extends RecyclerView.Adapter<ParadaAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Paradas parada = listaParadas.get(position);
+        Paradas parada = lista.get(position);
         holder.cel.setText(parada.getCelula());
         holder.horaI.setText(String.format("%s", parada.getHoraI()));
         holder.horaF.setText(String.format("%s", parada.getHoraF()));
@@ -64,16 +55,15 @@ public class ParadaAdapter extends RecyclerView.Adapter<ParadaAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return this.listaParadas.size();
+        return this.lista.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView cel, horaI, horaF, obs, cod;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            context = itemView.getContext();
             cel = itemView.findViewById(R.id.textCel);
             horaI = itemView.findViewById(R.id.textHoraI);
             horaF = itemView.findViewById(R.id.textHoraF);

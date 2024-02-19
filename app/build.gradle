@@ -6,6 +6,9 @@ plugins {
 
 
 android {
+    buildFeatures {
+        buildConfig = true
+    }
     namespace 'com.example.planilhahorasparadas'
     compileSdk 34
 
@@ -24,10 +27,17 @@ android {
     }
 
     buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+
+
+            debug {
+                buildConfigField "String", "URL_PLANILHA", '"AKfycbygIR_KLq6sAIJ2QHvqwLA_NOEV-v3UZ6aTm1l3OGiozwgFdisMBRqpdHOBhFb1gpRa/exec"'
+            }
+
+            release {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                buildConfigField "String","URL_PLANILHA",  '"AKfycbygIR_KLq6sAIJ2QHvqwLA_NOEV-v3UZ6aTm1l3OGiozwgFdisMBRqpdHOBhFb1gpRa/exec"'
+            }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

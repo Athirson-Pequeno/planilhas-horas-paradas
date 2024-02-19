@@ -1,39 +1,28 @@
 package com.example.planilhahorasparadas.adapter;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.planilhahorasparadas.R;
-import com.example.planilhahorasparadas.activities.SelectDateActivity;
-import com.example.planilhahorasparadas.activities.WorkActivity;
 import com.example.planilhahorasparadas.models.Data;
 
 import java.util.List;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> {
 
-    private Context context;
-    private final List<Data> listaData;
-    private LongItemClickListener longItemClickListener;
-    private ItemClickListener itemClickListener;
+    private final List<Data> lista;
+    private final LongItemClickListener longItemClickListener;
+    private final ItemClickListener itemClickListener;
 
-    public DataAdapter(List<Data> listaData, LongItemClickListener longItemClickListener, ItemClickListener itemClickListener) {
-        this.listaData = listaData;
+    public DataAdapter(List<Data> lista, LongItemClickListener longItemClickListener, ItemClickListener itemClickListener) {
+        this.lista = lista;
         this.longItemClickListener = longItemClickListener;
         this.itemClickListener = itemClickListener;
-    }
-
-    public DataAdapter(List<Data> list) {
-        this.listaData = list;
     }
 
     @NonNull
@@ -48,7 +37,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Data data = listaData.get(position);
+        Data data = lista.get(position);
 
         holder.textData.setText(data.getDataText());
 
@@ -58,32 +47,30 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
             return true;
         });
 
-        holder.itemView.setOnClickListener(view -> {
-            itemClickListener.onItemClick(data);
-        });
+        holder.itemView.setOnClickListener(view -> itemClickListener.onItemClick(data));
     }
 
-    public interface LongItemClickListener{
+    public interface LongItemClickListener {
         void onLongItemClick(Data data);
     }
 
-    public interface ItemClickListener{
+    public interface ItemClickListener {
         void onItemClick(Data data);
 
     }
+
     @Override
     public int getItemCount() {
-        return this.listaData.size();
+        return this.lista.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView textData;
 
         public MyViewHolder(@NonNull View itemView) {
 
             super(itemView);
-            context = itemView.getContext();
             textData = itemView.findViewById(R.id.textData);
 
         }

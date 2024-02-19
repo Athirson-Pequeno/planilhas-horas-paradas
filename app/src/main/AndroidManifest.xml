@@ -24,12 +24,6 @@
             android:name=".activities.FragmentsViewActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.PesquisaCores"
-            android:exported="false" />
-        <activity
-            android:name=".activities.CoresView"
-            android:exported="false" />
-        <activity
             android:name=".activities.InitialActivity"
             android:exported="true">
             <intent-filter>
@@ -39,17 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.DefectsWorkActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.SelectRoute"
-            android:exported="false" />
-        <activity
             android:name=".activities.SelectDateActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activities.WorkActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity

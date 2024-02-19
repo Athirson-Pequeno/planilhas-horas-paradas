@@ -39,7 +39,7 @@ import java.util.Objects;
 public class FragmentsViewActivity extends AppCompatActivity implements View.OnClickListener {
     SharedPreferences sharedPreferences = null;
     private final FragmentManager fragmentManager = getSupportFragmentManager();
-    private Button buttonProducao, buttonParadas, buttonInutilizado, buttonSignOut;
+    private Button buttonProducao, buttonParadas, buttonInutilizado;
     private Data data;
     private final String PRODUCAO_TAG = "producao";
     private final String PARADA_TAG = "paradas";
@@ -135,12 +135,11 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
             List<Paradas> paradasNaoSalvas = paradasDAO.buscarNaoSalvos();
             List<Producao> producaoNaoSalvas = producaoDAO.buscarNaoSalvos();
 
+
             HashMap<String, Object> map = new HashMap<>();
 
 
             map.put("paradas", paradasNaoSalvas);
-
-
             map.put("producao", producaoNaoSalvas);
 
 
@@ -150,6 +149,53 @@ public class FragmentsViewActivity extends AppCompatActivity implements View.OnC
                 UploadDataToSheets uploadDataToSheets = new UploadDataToSheets();
                 uploadDataToSheets.uploadParadas(map, imageButtonSync);
             }
+        });
+
+        imageButtonSync.setOnLongClickListener(view -> {
+            if (sharedPreferences.getBoolean("teste", false))
+            {
+                ParadasDAO paradasDAO = new ParadasDAO(MyApplicationContext.getAppContext());
+                ProducaoDAO producaoDAO = new ProducaoDAO(MyApplicationContext.getAppContext());
+
+                List<Paradas> paradasNaoSalvas = paradasDAO.buscarNaoSalvos();
+                List<Producao> producaoNaoSalvas = producaoDAO.buscarNaoSalvos();
+
+                producaoNaoSalvas.addAll(producaoNaoSalvas);
+                producaoNaoSalvas.addAll(producaoNaoSalvas);
+                producaoNaoSalvas.addAll(producaoNaoSalvas);
+                producaoNaoSalvas.addAll(producaoNaoSalvas);
+                producaoNaoSalvas.addAll(producaoNaoSalvas);
+                producaoNaoSalvas.addAll(producaoNaoSalvas);
+                producaoNaoSalvas.addAll(producaoNaoSalvas);
+                producaoNaoSalvas.addAll(producaoNaoSalvas);
+
+
+                paradasNaoSalvas.addAll(paradasNaoSalvas);
+                paradasNaoSalvas.addAll(paradasNaoSalvas);
+                paradasNaoSalvas.addAll(paradasNaoSalvas);
+                paradasNaoSalvas.addAll(paradasNaoSalvas);
+                paradasNaoSalvas.addAll(paradasNaoSalvas);
+                paradasNaoSalvas.addAll(paradasNaoSalvas);
+                paradasNaoSalvas.addAll(paradasNaoSalvas);
+                paradasNaoSalvas.addAll(paradasNaoSalvas);
+
+                HashMap<String, Object> map = new HashMap<>();
+
+
+                map.put("paradas", paradasNaoSalvas);
+                map.put("producao", producaoNaoSalvas);
+
+
+                if (paradasNaoSalvas.isEmpty() && producaoNaoSalvas.isEmpty()) {
+                    Toast.makeText(this, "Todos itens já foram salvos", Toast.LENGTH_SHORT).show();
+                } else {
+                    UploadDataToSheets uploadDataToSheets = new UploadDataToSheets();
+                    uploadDataToSheets.uploadParadas(map, imageButtonSync);
+                }
+            }else {
+                Toast.makeText(this, "TESTE DESATIVADO", Toast.LENGTH_SHORT).show();
+            }
+            return true;
         });
 
         buttonProducao = findViewById(R.id.buttonFragmentProducao);

@@ -32,9 +32,6 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
     private Toolbar toolbar;
     private DataDAO dataDAO;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +94,7 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void setToolbar() {
-        toolbar.setTitle("Selection uma data e horário");
+        toolbar.setTitle("Selecione a data");
     }
 
 
