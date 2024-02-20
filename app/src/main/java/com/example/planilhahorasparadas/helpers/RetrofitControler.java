@@ -14,7 +14,6 @@ import com.example.planilhahorasparadas.models.Paradas;
 import com.example.planilhahorasparadas.models.Producao;
 import com.example.planilhahorasparadas.models.ResponseCall;
 import com.example.planilhahorasparadas.util.MyApplicationContext;
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,20 +25,20 @@ import retrofit2.Response;
 
 public class RetrofitControler {
 
-    private boolean sucess;
+    private boolean success;
 
-    public boolean saveParada(HashMap map, String user, Context context, ImageButton buttonSync) {
+    public boolean saveParada(HashMap map, String user,String data, Context context, ImageButton buttonSync) {
 
         spinButtonSync(context, buttonSync);
         RetrofitServiceInterface retrofitServiceInterface = RetrofitInstance.getRetrofitInstance().create(RetrofitServiceInterface.class);
-        Call<ResponseCall> call = retrofitServiceInterface.saveParada(map, user);
+        Call<ResponseCall> call = retrofitServiceInterface.saveParada(map, user,data);
         call.enqueue(new Callback<ResponseCall>() {
             @Override
             public void onResponse(Call<ResponseCall> call, Response<ResponseCall> response) {
 
                 System.out.println(response.message());
 
-                if (response.code() == 200) {
+                if (response.isSuccessful()) {
                     stopBtnAnimation(buttonSync);
                     Toast.makeText(context, "Sucesso ao salvar.", Toast.LENGTH_LONG).show();
 
@@ -56,12 +55,12 @@ public class RetrofitControler {
                         producao.forEach(producaoDAO::atualizarNaoSalvos);
                     }
 
-                    sucess = true;
+                    success = true;
                 } else {
                     stopBtnAnimation(buttonSync);
                     Toast.makeText(context, "Erro: A " + response.message(), Toast.LENGTH_LONG).show();
                     Log.i("SAVE_ON_TABLE: ", response.message());
-                    sucess = false;
+                    success = false;
                 }
             }
 
@@ -70,31 +69,12 @@ public class RetrofitControler {
                 stopBtnAnimation(buttonSync);
                 Toast.makeText(context, "Erro: B " + t.getMessage(), Toast.LENGTH_LONG).show();
                 Log.i("SAVE_ON_TABLE: ", Objects.requireNonNull(t.getMessage()));
-                sucess = false;
+                success = false;
             }
         });
-        return sucess;
+        return success;
 
     }
-
-    /*public String getTableId(Context context) {
-        RetrofitServiceInterface retrofitServiceInterface = RetrofitInstance.getRetrofitInstance().create(RetrofitServiceInterface.class);
-        Call<ResponseTableId> call = retrofitServiceInterface.getTableID();
-        call.enqueue(new Callback<ResponseTableId>() {
-            @Override
-            public void onResponse(Call<ResponseTableId> call, Response<ResponseTableId> response) {
-                if (response.body() != null) {
-                    tableID = response.body().getCod();
-                }
-            }
-            @Override
-            public void onFailure(Call<ResponseTableId> call, Throwable t) {
-                Toast.makeText(context, "Erro ao carregar id do projeto", Toast.LENGTH_LONG).show();
-            }
-        });
-        return tableID;
-    }*/
-
 
     private void spinButtonSync(Context context, ImageButton buttonSync) {
         Animation rotation = AnimationUtils.loadAnimation(context, R.anim.button_spin);

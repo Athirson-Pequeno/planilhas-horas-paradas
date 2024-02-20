@@ -6,16 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -119,7 +116,7 @@ public class ParadasFragment extends Fragment {
         buttonAdd.setOnClickListener(view1 -> addParada());
 
 
-        ((FragmentsViewActivity) requireActivity()).setFragmentRefreshListener((dataIDAc, celula, horarioSpinner) -> {
+        ((FragmentsViewActivity) requireActivity()).setFragmentParadasRefreshListener((dataIDAc, celula, horarioSpinner) -> {
             dataId = dataIDAc;
             celulaSelecionada = celula;
             horarioSelecionado = horarioSpinner;
@@ -137,7 +134,7 @@ public class ParadasFragment extends Fragment {
         String horaI = editTextHoraInicial.getText().toString();
         String horaF = editTextHoraFim.getText().toString();
         String obs = editTextObservacao.getText().toString();
-        String cod = spinner.getSelectedItem().toString().substring(0, 5);
+        String cod = spinner.getSelectedItem().toString();
 
         if (spinner.getSelectedItemId() == 0) {
             cod = "";

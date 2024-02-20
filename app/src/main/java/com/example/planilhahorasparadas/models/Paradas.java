@@ -7,6 +7,7 @@ public class Paradas {
     private Integer horaF;
     private String obs;
     private String cod;
+    private String descricaoParada;
     private Integer dataId;
     private String horario;
     private Boolean salvo;
@@ -19,6 +20,14 @@ public class Paradas {
     }
 
     public Paradas() {
+    }
+
+    public String getDescricaoParada() {
+        return descricaoParada;
+    }
+
+    public void setDescricaoParada(String descricaoParada) {
+        this.descricaoParada = descricaoParada;
     }
 
     public Integer getDataId() {

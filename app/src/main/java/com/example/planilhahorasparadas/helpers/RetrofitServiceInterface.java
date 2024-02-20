@@ -16,6 +16,6 @@ import retrofit2.http.Query;
 public interface RetrofitServiceInterface {
     @POST(BuildConfig.URL_PLANILHA)
     @Headers({"Accept:application/json", "Content-Type:application/json"})
-    Call<ResponseCall> saveParada(@Body HashMap map, @Query("user") String user);
+    Call<ResponseCall> saveParada(@Body HashMap map, @Query("user") String user, @Query("data") String data);
 
 }

@@ -40,7 +40,7 @@ public class ParadaAdapter extends RecyclerView.Adapter<ParadaAdapter.MyViewHold
         holder.horaI.setText(String.format("%s", parada.getHoraI()));
         holder.horaF.setText(String.format("%s", parada.getHoraF()));
         holder.obs.setText(parada.getObs());
-        holder.cod.setText(parada.getCod());
+        holder.cod.setText(parada.getCod().substring(0, 5));
 
 
         holder.itemView.setOnLongClickListener(view -> {

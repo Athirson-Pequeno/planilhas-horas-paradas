@@ -111,7 +111,7 @@ public class ProducaoFragment extends Fragment {
 
         buttonAdd.setOnClickListener(viewOnClick -> addProducao());
 
-        ((FragmentsViewActivity) requireActivity()).setFragmentRefreshListener2((dataIDAc, celula, horarioSpinner) -> {
+        ((FragmentsViewActivity) requireActivity()).setFragmentProducaoRefreshListener((dataIDAc, celula, horarioSpinner) -> {
             dataId = dataIDAc;
             celulaSelecionada = celula;
             horarioSelecionado = horarioSpinner;

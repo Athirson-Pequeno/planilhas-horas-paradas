@@ -125,7 +125,7 @@ public class SelectDateActivity extends AppCompatActivity implements View.OnClic
         datePicker.addOnPositiveButtonClickListener(selection -> {
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
             calendar.setTimeInMillis(selection);
-            String diaDoMes = String.format("%02d/%02d/%s", calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+            String diaDoMes = String.format("%02d-%02d-%s", calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
             addData(diaDoMes);
         });
 

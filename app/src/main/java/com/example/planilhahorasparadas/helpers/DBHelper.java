@@ -14,6 +14,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String PRODUCAO_TABLE_NAME = "producao_table";
     public static final String CORES_TABLE_NAME = "cores_table";
     public static final String ARTIGOS_TABLE_NAME = "artigos_table";
+    public static final String COD_PARADAS_TABLE_NAME = "cod_paradas_table";
     public static final int VERSION = 1;
 
     public DBHelper(@Nullable Context context) {
@@ -70,6 +71,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 "cod TEXT," +
                 "descricao TEXT);";
 
+        String sqlTabelasCodArtifos = "CREATE TABLE IF NOT EXISTS " + COD_PARADAS_TABLE_NAME +
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "cod TEXT," +
+                "descricao TEXT);";
+
         try {
             sqLiteDatabase.execSQL(sqlTabelaDatas);
             Log.i("INFO-DATABASE_DATA", "Tabela " + DATA_TABLE_NAME + " criada");
@@ -101,6 +107,13 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             sqLiteDatabase.execSQL(sqlTabelaArtigos);
             Log.i("INFO-DATABASE_DATA", "Tabela " + PARADA_TABLE_NAME + " criada");
+        } catch (Exception e) {
+            Log.i("INFO-DATABASE_DATA", "error create table: " + e.getMessage());
+        }
+
+        try {
+            sqLiteDatabase.execSQL(sqlTabelasCodArtifos);
+            Log.i("INFO-DATABASE_DATA", "Tabela " + COD_PARADAS_TABLE_NAME + " criada");
         } catch (Exception e) {
             Log.i("INFO-DATABASE_DATA", "error create table: " + e.getMessage());
         }

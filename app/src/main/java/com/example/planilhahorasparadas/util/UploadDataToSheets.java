@@ -12,10 +12,9 @@ import java.util.List;
 public class UploadDataToSheets {
     private RetrofitControler retrofitControler = new RetrofitControler();
 
-
-    public boolean uploadParadas(HashMap map, ImageButton buttonSync) {
+    public boolean uploadParadas(HashMap map, ImageButton buttonSync, String data) {
         GoogleSignInAccount account = GoogleSignInUtil.getAccount();
-        return retrofitControler.saveParada(map, (account.getDisplayName() + " " + account.getEmail()), MyApplicationContext.getAppContext(), buttonSync);
+        return retrofitControler.saveParada(map, (account.getDisplayName() + " " + account.getEmail()), data, MyApplicationContext.getAppContext(), buttonSync);
 
     }
 }
